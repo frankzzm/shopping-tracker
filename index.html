@@ -15,25 +15,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 .app{max-width:480px;margin:0 auto;padding:16px 16px 60px}
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-top:8px}
 .header-title{font-size:22px;font-weight:600}
-.header-right{display:flex;align-items:center;gap:10px}
+.header-right{display:flex;align-items:center;gap:8px}
 .header-ym{font-size:13px;color:var(--text3)}
-.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--bg3);flex-shrink:0}
-.sync-dot.ok{background:#5DCAA5}.sync-dot.err{background:var(--red)}.sync-dot.busy{background:#EF9F27;animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--bg3);flex-shrink:0;cursor:pointer}
+.sync-dot.ok{background:#5DCAA5}
+.sync-dot.err{background:var(--red)}
+.sync-dot.busy{background:#EF9F27;animation:pulse .8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.sync-label{font-size:11px;color:var(--text3)}
 
-/* currency bar */
-.fx-bar{background:var(--bg);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.fx-rate{font-size:13px;color:var(--text2);flex:1;min-width:120px}
-.fx-rate strong{color:var(--text);font-weight:600}
-.fx-input-row{display:flex;align-items:center;gap:6px}
-.fx-input-row input{width:90px;font-size:15px;padding:6px 10px;border:.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg2);color:var(--text);text-align:right}
-.fx-input-row select{width:70px;font-size:14px;padding:6px 8px;border:.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg2);color:var(--text)}
-.fx-arrow{font-size:14px;color:var(--text3)}
-.fx-result{font-size:15px;font-weight:600;color:var(--blue-text);min-width:80px}
-.fx-updated{font-size:11px;color:var(--text3);width:100%;margin-top:2px}
+.fx-bar{background:var(--bg);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px}
+.fx-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fx-rate-txt{font-size:13px;color:var(--text2);flex:1;min-width:100px}
+.fx-rate-txt strong{color:var(--text);font-weight:600}
+.fx-inputs{display:flex;align-items:center;gap:6px}
+.fx-inputs input{width:76px;font-size:15px;padding:6px 8px;border:.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg2);color:var(--text);text-align:right}
+.fx-inputs select{font-size:13px;padding:6px 6px;border:.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg2);color:var(--text);appearance:none;-webkit-appearance:none;padding-right:4px}
+.fx-arrow{color:var(--text3);font-size:13px}
+.fx-result{font-size:15px;font-weight:600;color:var(--blue-text);min-width:72px}
+.fx-updated{font-size:11px;color:var(--text3);margin-top:6px}
 
 .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:16px}
-.mc{background:var(--bg);border:.5px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;transition:all .15s}
+.mc{background:var(--bg);border:.5px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;transition:border .15s}
 .mc.sel{border:1.5px solid var(--blue)}
 .mc-name{font-size:11px;color:var(--text3);margin-bottom:5px;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
 .mc-bal{font-size:26px;font-weight:700;color:var(--text);line-height:1}.mc-bal.neg{color:var(--red)}
@@ -56,7 +59,7 @@ input[type="date"]{font-size:15px}
 input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(55,138,221,.15)}
 select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
 .amt-row{display:grid;grid-template-columns:1fr 80px;gap:8px}
-.amt-row select{font-size:14px;padding:10px 8px}
+.amt-row select{padding:10px 6px;padding-right:24px;background-position:right 6px center;font-size:14px}
 .toggle-row{display:flex;gap:6px;flex-wrap:wrap}
 .tb{font-size:13px;padding:7px 14px;border:.5px solid var(--border2);border-radius:20px;background:transparent;color:var(--text2);cursor:pointer;font-family:inherit;transition:all .12s}
 .tb.on{background:var(--blue-bg);border-color:var(--blue);color:var(--blue-text);font-weight:500}
@@ -73,11 +76,14 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .tx:last-child{border-bottom:none}
 .tx-left{flex:1;min-width:0}
 .tx-name{font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tx-note{font-size:12px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-note{font-size:12px;color:var(--text3);margin-top:2px;display:flex;align-items:center;gap:4px}
+.tx-note-text{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx-note-edit{font-size:11px;color:var(--blue-text);cursor:pointer;flex-shrink:0;white-space:nowrap}
+.tx-note-input{font-size:12px;padding:4px 8px;border:.5px solid var(--border2);border-radius:6px;background:var(--bg2);color:var(--text);width:100%;margin-top:4px}
 .tx-meta{font-size:12px;color:var(--text3);margin-top:2px}
 .tx-right{text-align:right;flex-shrink:0}
 .tx-amt{font-size:14px;font-weight:600;color:var(--text)}
-.tx-amt-cny{font-size:11px;color:var(--text3);margin-top:2px}
+.tx-cny{font-size:11px;color:var(--text3);margin-top:1px}
 .tx-del{font-size:11px;color:var(--text3);cursor:pointer;margin-top:4px;display:block}
 .tx-del:active{color:var(--red)}
 .tag{display:inline-block;font-size:10px;padding:1px 5px;border-radius:6px;margin-left:4px;vertical-align:middle;font-weight:500}
@@ -114,84 +120,109 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 const ALLOW=500,THRESH=200,MULT=1.2;
 const MEMBERS=['Frank','Lea'];
 const API_KEY='$2a$10$3sWWx.qH93wXRHZntmheC.MIaGUyQBVL.8XuI3vB3w9XMeJsmDB1C';
-const BIN_KEY='jb_bin_id';
+const SHARED_BIN='69c1d54dc3097a1dd552b61a'; // fixed shared bin for all users
 const BASE='https://api.jsonbin.io/v3';
-let DB={txs:{},bal:{},adjLog:[],lastYM:''},binId=null,saving=false,saveQueued=false;
+let DB={txs:{},bal:{},adjLog:[],lastYM:''},saving=false,saveQueued=false;
 let fxRate=7.25,fxUpdated='';
 
-// ── currency ──
-const CURRENCIES={USD:{symbol:'$',name:'USD'},CNY:{symbol:'¥',name:'CNY'},EUR:{symbol:'€',name:'EUR'},GBP:{symbol:'£',name:'GBP'},JPY:{symbol:'¥',name:'JPY'},HKD:{symbol:'HK$',name:'HKD'}};
+const CURRENCIES={USD:'$',CNY:'¥',EUR:'€',GBP:'£',JPY:'¥',HKD:'HK$'};
 
+// ── exchange rate ──
 async function fetchRate(){
   try{
     const r=await fetch('https://api.exchangerate-api.com/v4/latest/USD');
     const d=await r.json();
     fxRate=d.rates.CNY||7.25;
     fxUpdated=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
-    renderFxBar();
-  }catch(e){fxRate=7.25;}
+    const el=document.getElementById('fxRateVal');
+    if(el)el.textContent=fxRate.toFixed(4);
+    const upd=document.getElementById('fxUpdatedTxt');
+    if(upd)upd.textContent='更新于 '+fxUpdated;
+    updateFxResult();
+  }catch(e){}
 }
 
-function convertAmt(amt,fromCurrency){
-  if(fromCurrency==='USD')return amt;
-  if(fromCurrency==='CNY')return amt/fxRate;
-  // for others, approximate via USD
-  const rates={EUR:1.08,GBP:1.27,JPY:0.0067,HKD:0.128};
-  return amt*(rates[fromCurrency]||1);
+function toUSD(amt,cur){
+  if(cur==='USD')return amt;
+  const toUSDRate={CNY:1/fxRate,EUR:1/0.93,GBP:1/0.79,JPY:1/149,HKD:1/7.83};
+  return amt*(toUSDRate[cur]||1);
+}
+function fromUSD(amt,cur){
+  if(cur==='USD')return amt;
+  const fromUSDRate={CNY:fxRate,EUR:0.93,GBP:0.79,JPY:149,HKD:7.83};
+  return amt*(fromUSDRate[cur]||1);
 }
 
-function toCNY(usdAmt){return usdAmt*fxRate;}
-
-function renderFxBar(){
-  const bar=document.getElementById('fxBar');
-  if(!bar)return;
-  const fromCur=document.getElementById('fxFrom')?.value||'USD';
-  const toCur=document.getElementById('fxTo')?.value||'CNY';
-  const amt=parseFloat(document.getElementById('fxAmt')?.value)||1;
-  const usd=convertAmt(amt,fromCur);
-  let result;
-  if(toCur==='CNY')result=usd*fxRate;
-  else if(toCur==='USD')result=usd;
-  else{const rates={EUR:1.08,GBP:1.27,JPY:0.0067,HKD:0.128};result=usd/( rates[toCur]||1);}
-  const sym=CURRENCIES[toCur]?.symbol||'';
-  document.getElementById('fxResult').textContent=sym+result.toFixed(toCur==='JPY'?0:2);
-  if(fxUpdated)document.getElementById('fxUpdatedTxt').textContent='汇率更新于 '+fxUpdated+'，1 USD = '+fxRate.toFixed(4)+' CNY';
+function updateFxResult(){
+  const amt=parseFloat(document.getElementById('fxAmt')?.value)||0;
+  const from=document.getElementById('fxFrom')?.value||'USD';
+  const to=document.getElementById('fxTo')?.value||'CNY';
+  const usd=toUSD(amt,from);
+  const result=fromUSD(usd,to);
+  const sym=CURRENCIES[to]||'';
+  const el=document.getElementById('fxResult');
+  if(el)el.textContent=sym+(to==='JPY'?result.toFixed(0):result.toFixed(2));
 }
 
-// ── core ──
-function ym(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
-function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function fmtDate(s){if(!s)return'';const p=s.split('-');return p.length===3?p[1]+'/'+p[2]:s;}
-function setSyncDot(s){const d=document.getElementById('syncDot');if(d)d.className='sync-dot '+s;}
+// ── JSONBin ──
+async function apiFetch(url,opts){
+  const res=await fetch(url,{...opts,headers:{'Content-Type':'application/json','X-Master-Key':API_KEY,...(opts&&opts.headers||{})}});
+  if(!res.ok)throw new Error('HTTP '+res.status);
+  return res.json();
+}
+async function readBin(){const d=await apiFetch(BASE+'/b/'+SHARED_BIN+'/latest');return d.record;}
+async function writeBin(rec){await apiFetch(BASE+'/b/'+SHARED_BIN,{method:'PUT',body:JSON.stringify(rec)});}
 
-async function apiFetch(url,opts){const res=await fetch(url,{...opts,headers:{'Content-Type':'application/json','X-Master-Key':API_KEY,...(opts&&opts.headers||{})}});if(!res.ok)throw new Error('HTTP '+res.status);return res.json();}
-async function createBin(){const d=await apiFetch(BASE+'/b',{method:'POST',headers:{'X-Bin-Name':'shopping-tracker','X-Bin-Private':'false'},body:JSON.stringify({txs:{},bal:{},adjLog:[],lastYM:''})});return d.metadata.id;}
-async function readBin(id){const d=await apiFetch(BASE+'/b/'+id+'/latest');return d.record;}
-async function writeBin(id,rec){await apiFetch(BASE+'/b/'+id,{method:'PUT',body:JSON.stringify(rec)});}
+function setSyncStatus(state,msg){
+  const dot=document.getElementById('syncDot');
+  const lbl=document.getElementById('syncLabel');
+  if(dot)dot.className='sync-dot '+state;
+  if(lbl)lbl.textContent=msg||'';
+}
 
 async function init(){
-  binId=localStorage.getItem(BIN_KEY);
   try{
-    if(!binId){setSyncDot('busy');binId=await createBin();localStorage.setItem(BIN_KEY,binId);}
-    setSyncDot('busy');DB=await readBin(binId);
+    setSyncStatus('busy','同步中...');
+    DB=await readBin();
     if(!DB.txs)DB.txs={};if(!DB.bal)DB.bal={};if(!DB.adjLog)DB.adjLog=[];
-    ensureMonth();setSyncDot('ok');
+    ensureMonth();
+    setSyncStatus('ok','已同步');
   }catch(e){
-    setSyncDot('err');const local=localStorage.getItem('shopping_local');
+    setSyncStatus('err','同步失败');
+    const local=localStorage.getItem('shopping_local');
     if(local)try{DB=JSON.parse(local);}catch(_){}
-    ensureMonth();showToast('离线模式，数据暂存本地');
+    ensureMonth();
+    showToast('无法连接云端，使用本地数据');
   }
   renderApp();
   fetchRate();
+  // auto-refresh every 30s
+  setInterval(async()=>{
+    if(saving)return;
+    try{
+      const fresh=await readBin();
+      if(JSON.stringify(fresh)!==JSON.stringify(DB)){
+        DB=fresh;if(!DB.txs)DB.txs={};if(!DB.bal)DB.bal={};if(!DB.adjLog)DB.adjLog=[];
+        ensureMonth();renderAll();setSyncStatus('ok','已同步');
+      }
+    }catch(e){setSyncStatus('err','同步失败');}
+  },30000);
 }
 
 async function saveDB(){
   localStorage.setItem('shopping_local',JSON.stringify(DB));
   if(saving){saveQueued=true;return;}
-  saving=true;setSyncDot('busy');
-  try{await writeBin(binId,DB);setSyncDot('ok');}
-  catch(e){setSyncDot('err');showToast('同步失败，已存本地');}
-  finally{saving=false;if(saveQueued){saveQueued=false;saveDB();}}
+  saving=true;setSyncStatus('busy','保存中...');
+  try{
+    await writeBin(DB);
+    setSyncStatus('ok','已同步');
+  }catch(e){
+    setSyncStatus('err','同步失败');
+    showToast('同步失败，数据已存本地');
+  }finally{
+    saving=false;
+    if(saveQueued){saveQueued=false;saveDB();}
+  }
 }
 
 function ensureMonth(){
@@ -199,9 +230,13 @@ function ensureMonth(){
   if(DB.lastYM&&DB.lastYM!==m){DB.bal[m]={};MEMBERS.forEach(n=>{DB.bal[m][n]={used:0};});}
   if(!DB.bal[m])DB.bal[m]={};
   MEMBERS.forEach(n=>{if(!DB.bal[m][n])DB.bal[m][n]={used:0};});
-  if(!DB.txs[m])DB.txs[m]=[];DB.lastYM=m;
+  if(!DB.txs[m])DB.txs[m]=[];
+  DB.lastYM=m;
 }
 
+function ym(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function fmtDate(s){if(!s)return'';const p=s.split('-');return p.length===3?p[1]+'/'+p[2]:s;}
 function getUsed(member){return(DB.bal[ym()][member]||{used:0}).used||0;}
 function applyOverspend(amount,used){if(used-ALLOW>=THRESH)return+(amount*MULT).toFixed(2);const after=used+amount;if(after-ALLOW>THRESH){const norm=Math.max(0,ALLOW+THRESH-used);return+(norm+(amount-norm)*MULT).toFixed(2);}return+amount.toFixed(2);}
 function calcCharge(amount,adj,inst,sc,used){const per=amount/sc;const total=per*adj*(1+(inst>1?inst/100:0));return applyOverspend(total/inst,used);}
@@ -211,7 +246,7 @@ function updatePreview(){
   const who=document.getElementById('fWho').value;
   const rawAmt=parseFloat(document.getElementById('fAmt').value)||0;
   const cur=document.getElementById('fCur').value;
-  const amt=convertAmt(rawAmt,cur); // convert to USD
+  const amt=toUSD(rawAmt,cur);
   const inst=parseInt(document.getElementById('fInst').value)||1;
   let adj=parseFloat(document.getElementById('fAdj').value);
   if(isNaN(adj))adj=parseFloat(document.getElementById('fAdjC').value)||1;
@@ -221,10 +256,10 @@ function updatePreview(){
   if(!rawAmt){pv.innerHTML='填写金额后会显示实际计入金额';pv.className='preview empty';return;}
   const charge=calcCharge(amt,adj,inst,1+splits.length,used);
   pv.className='preview';
-  const curSym=CURRENCIES[cur]?.symbol||'$';
+  const sym=CURRENCIES[cur]||'$';
   let h='本月计入 <span class="hi">$'+charge.toFixed(2)+'</span>';
-  if(cur!=='USD')h+=' ('+curSym+rawAmt.toFixed(2)+')';
-  if(inst>1)h+='，总计 $'+((amt/(1+splits.length))*adj*(1+inst/100)).toFixed(2)+'，共'+inst+'期';
+  if(cur!=='USD')h+=' (原'+sym+(cur==='JPY'?rawAmt.toFixed(0):rawAmt.toFixed(2))+')';
+  if(inst>1)h+='，共'+inst+'期，总计 $'+((amt/(1+splits.length))*adj*(1+inst/100)).toFixed(2);
   if(adj<1)h+='，折扣'+(adj*100).toFixed(0)+'%';
   if(splits.length)h+='，'+(1+splits.length)+'人平摊';
   if(used+charge>ALLOW+THRESH)h+=' <span class="warn">— 超支×1.2已触发</span>';
@@ -238,7 +273,7 @@ async function addTx(){
   const who=document.getElementById('fWho').value;
   const rawAmt=parseFloat(document.getElementById('fAmt').value);
   const cur=document.getElementById('fCur').value;
-  const amt=convertAmt(rawAmt,cur);
+  const amt=toUSD(rawAmt,cur);
   const item=document.getElementById('fItem').value.trim();
   const note=document.getElementById('fNote').value.trim();
   const dv=document.getElementById('fDate').value||today();
@@ -272,6 +307,23 @@ async function deleteTx(id){
   const m=ym();const i=DB.txs[m].findIndex(t=>t.id===id);if(i<0)return;
   const t=DB.txs[m][i];DB.bal[m][t.member].used=Math.max(0,+(DB.bal[m][t.member].used-t.charge).toFixed(2));
   DB.txs[m].splice(i,1);await saveDB();renderAll();showToast('已删除');
+}
+
+function showNoteEdit(id){
+  const m=ym();const t=DB.txs[m].find(x=>x.id===id);if(!t)return;
+  const wrap=document.getElementById('note-wrap-'+id);
+  if(!wrap)return;
+  wrap.innerHTML='<input class="tx-note-input" id="note-inp-'+id+'" value="'+((t.note||'').replace(/"/g,'&quot;'))+'" placeholder="添加备注..."/>'
+    +'<span style="font-size:11px;color:var(--blue-text);cursor:pointer;margin-top:4px;display:block" onclick="saveNote(\''+id+'\')">保存</span>';
+  document.getElementById('note-inp-'+id)?.focus();
+}
+
+async function saveNote(id){
+  const m=ym();const t=DB.txs[m].find(x=>x.id===id);if(!t)return;
+  const inp=document.getElementById('note-inp-'+id);
+  if(!inp)return;
+  t.note=inp.value.trim();
+  await saveDB();renderTx();showToast('备注已更新');
 }
 
 async function doAdj(type){
@@ -330,10 +382,11 @@ function renderTx(){
     if(t.adj<1)tags.push('<span class="tag ta">'+(t.adj*100).toFixed(0)+'%</span>');
     const base=(t.originalAmt/(1+(t.splitWith||[]).length))*t.adj;
     if(t.charge>base/t.inst*1.05)tags.push('<span class="tag tp">×1.2</span>');
-    const curSym=CURRENCIES[t.currency||'USD']?.symbol||'$';
-    const showOrig=t.currency&&t.currency!=='USD';
-    const cnyAmt='≈ ¥'+(t.charge*fxRate).toFixed(0);
-    return '<div class="tx"><div class="tx-left"><div class="tx-name">'+t.item+tags.join('')+'</div>'+(t.note?'<div class="tx-note">'+t.note+'</div>':'')+'<div class="tx-meta">'+t.member+' · '+fmtDate(t.date)+(showOrig?' · 原'+curSym+t.originalAmt.toFixed(2):'')+'</div></div><div class="tx-right"><div class="tx-amt">-$'+t.charge.toFixed(2)+'</div><div class="tx-amt-cny">'+cnyAmt+'</div><span class="tx-del" onclick="deleteTx(\''+t.id+'\')">删除</span></div></div>';
+    const cur=t.currency||'USD';const sym=CURRENCIES[cur]||'$';
+    const showOrig=cur!=='USD';
+    const cny='≈ ¥'+(t.charge*fxRate).toFixed(0);
+    const noteHtml='<div class="tx-note" id="note-wrap-'+t.id+'">'+(t.note?'<span class="tx-note-text">'+t.note+'</span>':'')+'<span class="tx-note-edit" onclick="showNoteEdit(\''+t.id+'\')">'+(t.note?'编辑':'+ 备注')+'</span></div>';
+    return '<div class="tx"><div class="tx-left"><div class="tx-name">'+t.item+tags.join('')+'</div>'+noteHtml+'<div class="tx-meta">'+t.member+' · '+fmtDate(t.date)+(showOrig?' · '+sym+(cur==='JPY'?t.originalAmt.toFixed(0):t.originalAmt.toFixed(2)):'')+'</div></div><div class="tx-right"><div class="tx-amt">-$'+t.charge.toFixed(2)+'</div><div class="tx-cny">'+cny+'</div><span class="tx-del" onclick="deleteTx(\''+t.id+'\')">删除</span></div></div>';
   }).join('');
 }
 function renderAll(){renderCards();renderTx();}
@@ -341,20 +394,29 @@ function renderAll(){renderCards();renderTx();}
 let toastTimer;
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2500);}
 
-function buildCurOptions(selected){return Object.keys(CURRENCIES).map(k=>'<option value="'+k+'"'+(k===selected?' selected':'')+'>'+CURRENCIES[k].name+'</option>').join('');}
+function buildCurOpts(sel){return Object.keys(CURRENCIES).map(k=>'<option value="'+k+'"'+(k===sel?' selected':'')+'>'+k+'</option>').join('');}
 
 function renderApp(){
   document.getElementById('app').innerHTML=`
-<div class="header"><span class="header-title">购物额度</span><div class="header-right"><span class="header-ym" id="ymLabel"></span><div class="sync-dot ok" id="syncDot"></div></div></div>
+<div class="header">
+  <span class="header-title">购物额度</span>
+  <div class="header-right">
+    <span class="header-ym" id="ymLabel"></span>
+    <span class="sync-label" id="syncLabel">连接中...</span>
+    <div class="sync-dot busy" id="syncDot" onclick="manualSync()" title="点击手动同步"></div>
+  </div>
+</div>
 
-<div class="fx-bar" id="fxBar">
-  <div class="fx-rate">1 USD = <strong id="fxRateDisplay">...</strong> CNY</div>
-  <div class="fx-input-row">
-    <input type="number" id="fxAmt" value="1" min="0" step="any" oninput="renderFxBar()" style="width:80px"/>
-    <select id="fxFrom" onchange="renderFxBar()">${buildCurOptions('USD')}</select>
-    <span class="fx-arrow">→</span>
-    <select id="fxTo" onchange="renderFxBar()">${buildCurOptions('CNY')}</select>
-    <span class="fx-result" id="fxResult">...</span>
+<div class="fx-bar">
+  <div class="fx-row">
+    <div class="fx-rate-txt">1 USD = <strong id="fxRateVal">...</strong> CNY</div>
+    <div class="fx-inputs">
+      <input type="number" id="fxAmt" value="1" min="0" step="any" oninput="updateFxResult()" style="width:72px"/>
+      <select id="fxFrom" onchange="updateFxResult()">${buildCurOpts('USD')}</select>
+      <span class="fx-arrow">→</span>
+      <select id="fxTo" onchange="updateFxResult()">${buildCurOpts('CNY')}</select>
+      <span class="fx-result" id="fxResult">...</span>
+    </div>
   </div>
   <div class="fx-updated" id="fxUpdatedTxt">正在获取汇率...</div>
 </div>
@@ -367,11 +429,11 @@ function renderApp(){
     <div class="fl"><label>购买日期</label><input type="date" id="fDate"/></div>
   </div>
   <div class="fl"><label>物品</label><input type="text" id="fItem" placeholder="买了什么？"/></div>
-  <div class="fl"><label>备注（用途等）</label><input type="text" id="fNote" placeholder="例如：出差补买、生日礼物..."/></div>
+  <div class="fl"><label>备注（用途等）</label><input type="text" id="fNote" placeholder="出差补买、生日礼物..."/></div>
   <div class="fl"><label>金额 &amp; 货币</label>
     <div class="amt-row">
       <input type="number" id="fAmt" placeholder="0.00" min="0.01" step="0.01" inputmode="decimal" oninput="updatePreview()"/>
-      <select id="fCur" onchange="updatePreview()">${buildCurOptions('USD')}</select>
+      <select id="fCur" onchange="updatePreview()">${buildCurOpts('USD')}</select>
     </div>
   </div>
   <div class="fg2">
@@ -402,11 +464,17 @@ function renderApp(){
   <div class="tx-filter"><select id="fFilter" onchange="renderTx()"><option value="">全部成员</option><option>Frank</option><option>Lea</option></select></div>
   <div id="txList"></div>
 </div>`;
-
   document.getElementById('fDate').value=today();
   onWhoChange();renderAll();
-  // update rate display after render
-  if(fxRate){document.getElementById('fxRateDisplay').textContent=fxRate.toFixed(4);renderFxBar();}
+}
+
+async function manualSync(){
+  setSyncStatus('busy','同步中...');
+  try{
+    const fresh=await readBin();
+    DB=fresh;if(!DB.txs)DB.txs={};if(!DB.bal)DB.bal={};if(!DB.adjLog)DB.adjLog=[];
+    ensureMonth();renderAll();setSyncStatus('ok','已同步');showToast('数据已刷新');
+  }catch(e){setSyncStatus('err','同步失败');showToast('同步失败，请检查网络');}
 }
 
 init();
