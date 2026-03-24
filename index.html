@@ -119,9 +119,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 <script>
 const ALLOW=500,THRESH=200,MULT=1.2;
 const MEMBERS=['Frank','Lea'];
-const API_KEY='$2a$10$3sWWx.qH93wXRHZntmheC.MIaGUyQBVL.8XuI3vB3w9XMeJsmDB1C';
-const SHARED_BIN='69c1d54dc3097a1dd552b61a'; // fixed shared bin for all users
-const BASE='https://api.jsonbin.io/v3';
+const FB_URL='https://my-project-78818-acdd8-default-rtdb.firebaseio.com/shopping.json';
 let DB={txs:{},bal:{},adjLog:[],lastYM:''},saving=false,saveQueued=false;
 let fxRate=7.25,fxUpdated='';
 
@@ -165,13 +163,8 @@ function updateFxResult(){
 }
 
 // ── JSONBin ──
-async function apiFetch(url,opts){
-  const res=await fetch(url,{...opts,headers:{'Content-Type':'application/json','X-Master-Key':API_KEY,...(opts&&opts.headers||{})}});
-  if(!res.ok)throw new Error('HTTP '+res.status);
-  return res.json();
-}
-async function readBin(){const d=await apiFetch(BASE+'/b/'+SHARED_BIN+'/latest');return d.record;}
-async function writeBin(rec){await apiFetch(BASE+'/b/'+SHARED_BIN,{method:'PUT',body:JSON.stringify(rec)});}
+async function readBin(){const r=await fetch(FB_URL);if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();return d||{txs:{},bal:{},adjLog:[],lastYM:''};}
+async function writeBin(rec){const r=await fetch(FB_URL,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(rec)});if(!r.ok)throw new Error('HTTP '+r.status);}
 
 function setSyncStatus(state,msg){
   const dot=document.getElementById('syncDot');
@@ -242,6 +235,12 @@ function applyOverspend(amount,used){if(used-ALLOW>=THRESH)return+(amount*MULT).
 function calcCharge(amount,adj,inst,sc,used){const per=amount/sc;const total=per*adj;return applyOverspend(total/inst,used);}
 function splitActive(){return Array.from(document.querySelectorAll('.tb.on')).map(b=>b.dataset.n);}
 
+function onTypeChange(){
+  const t=document.getElementById('fType').value;
+  document.getElementById('instRow').style.display=t==='installment'?'grid':'none';
+  document.getElementById('recurEndRow').style.display=t==='recurring'?'flex':'none';
+  updatePreview();
+}
 function updatePreview(){
   const who=document.getElementById('fWho').value;
   const rawAmt=parseFloat(document.getElementById('fAmt').value)||0;
@@ -259,7 +258,9 @@ function updatePreview(){
   const sym=CURRENCIES[cur]||'$';
   let h='本月计入 <span class="hi">$'+charge.toFixed(2)+'</span>';
   if(cur!=='USD')h+=' (原'+sym+(cur==='JPY'?rawAmt.toFixed(0):rawAmt.toFixed(2))+')';
-  if(inst>1)h+='，共'+inst+'期（无息），每期 $'+((amt/(1+splits.length))*adj/inst).toFixed(2);
+  const txType=document.getElementById('fType')?.value||'once';
+  if(txType==='recurring')h+='，每月扣除';
+  else if(inst>1)h+='，共'+inst+'期（无息），每期 $'+((amt/(1+splits.length))*adj/inst).toFixed(2);
   if(adj<1)h+='，折扣'+(adj*100).toFixed(0)+'%';
   if(splits.length)h+='，'+(1+splits.length)+'人平摊';
   if(used+charge>ALLOW+THRESH)h+=' <span class="warn">— 超支×1.2已触发</span>';
@@ -287,7 +288,9 @@ async function addTx(){
   const btn=document.getElementById('addBtn');btn.disabled=true;
   function rec(member,label,sw){
     const used=getUsed(member);const charge=calcCharge(amt,adj,inst,sc,used);
-    DB.txs[m].unshift({id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),member,item:label,note,originalAmt:rawAmt,currency:cur,adj,inst,splitWith:sw,charge,date:dv});
+    const txType=document.getElementById('fType').value;
+    const recurEnd=document.getElementById('fRecurEnd').value||null;
+    DB.txs[m].unshift({id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),member,item:label,note,originalAmt:rawAmt,currency:cur,adj,inst,splitWith:sw,charge,date:dv,type:txType,recurEnd});
     DB.bal[m][member].used=+(used+charge).toFixed(2);
   }
   rec(who,item,splits);splits.forEach(o=>rec(o,item+' (shared)',[who]));
@@ -297,7 +300,11 @@ async function addTx(){
 function resetForm(){
   document.getElementById('fAmt').value='';document.getElementById('fItem').value='';
   document.getElementById('fNote').value='';document.getElementById('fDate').value=today();
-  document.getElementById('fInst').value='1';document.getElementById('fAdj').value='1';
+  document.getElementById('fInst').value='1';
+  document.getElementById('fType').value='once';
+  document.getElementById('fRecurEnd').value='';
+  document.getElementById('instRow').style.display='none';
+  document.getElementById('recurEndRow').style.display='none';document.getElementById('fAdj').value='1';
   document.getElementById('adjRow').className='fl';
   document.querySelectorAll('.tb.on').forEach(b=>b.classList.remove('on'));
   const pv=document.getElementById('preview');pv.innerHTML='填写金额后会显示实际计入金额';pv.className='preview empty';
@@ -377,7 +384,10 @@ function renderTx(){
   if(!txs.length){list.innerHTML='<div class="empty-state">本月暂无记录</div>';return;}
   list.innerHTML=txs.map(t=>{
     const tags=[];
-    if(t.inst>1)tags.push('<span class="tag ti">'+t.inst+'期</span>');
+    if(t.type==='recurring'){
+      const recurTag='<span class="tag" style="background:var(--green-bg);color:var(--green-text)">每月</span>';
+      tags.push(recurTag);
+    } else if(t.inst>1)tags.push('<span class="tag ti">'+t.inst+'期</span>');
     if(t.splitWith&&t.splitWith.length)tags.push('<span class="tag ts">AA</span>');
     if(t.adj<1)tags.push('<span class="tag ta">'+(t.adj*100).toFixed(0)+'%</span>');
     const base=(t.originalAmt/(1+(t.splitWith||[]).length))*t.adj;
@@ -387,14 +397,27 @@ function renderTx(){
     const cny='≈ ¥'+(t.charge*fxRate).toFixed(0);
     const noteEditBtn='<span class="tx-note-edit" data-noteid="'+t.id+'">'+( t.note?'编辑':'+备注')+'</span>';
     const noteHtml='<div class="tx-note" id="note-wrap-'+t.id+'">'+( t.note?'<span class="tx-note-text">'+t.note+'</span>':'')+noteEditBtn+'</div>';
-    return '<div class="tx"><div class="tx-left"><div class="tx-name">'+t.item+tags.join('')+'</div>'+noteHtml+'<div class="tx-meta">'+t.member+' · '+fmtDate(t.date)+(showOrig?' · '+sym+(cur==='JPY'?t.originalAmt.toFixed(0):t.originalAmt.toFixed(2)):'')+'</div></div><div class="tx-right"><div class="tx-amt">-$'+t.charge.toFixed(2)+'</div><div class="tx-cny">'+cny+'</div><span class="tx-del" onclick="deleteTx(\''+t.id+'\')">删除</span></div></div>';
+    const recurInfo = t.type==='recurring'
+      ? (t.recurEnd ? ' · 至 '+t.recurEnd : ' · 长期') + '<span style="margin-left:6px;font-size:11px;color:var(--red-text);cursor:pointer" data-stopid="'+t.id+'">[停止]</span>'
+      : '';
+    return '<div class="tx"><div class="tx-left"><div class="tx-name">'+t.item+tags.join('')+'</div>'+noteHtml+'<div class="tx-meta">'+t.member+' · '+fmtDate(t.date)+(showOrig?' · '+sym+(cur==='JPY'?t.originalAmt.toFixed(0):t.originalAmt.toFixed(2)):'')+recurInfo+'</div></div><div class="tx-right"><div class="tx-amt">-$'+t.charge.toFixed(2)+'</div><div class="tx-cny">'+cny+'</div><span class="tx-del" onclick="deleteTx(\''+t.id+'\')">删除</span></div></div>';
   }).join('');
   list.onclick=function(e){
     const ne=e.target.closest('[data-noteid]');
     if(ne){showNoteEdit(ne.dataset.noteid);return;}
     const dl=e.target.closest('[data-delid]');
-    if(dl){deleteTx(dl.dataset.delid);}
+    if(dl){deleteTx(dl.dataset.delid);return;}
+    const st=e.target.closest('[data-stopid]');
+    if(st){stopRecurring(st.dataset.stopid);}
   };
+}
+async function stopRecurring(id){
+  const m=ym();const t=(DB.txs[m]||[]).find(x=>x.id===id);
+  if(!t)return;
+  const nextMonth=new Date();nextMonth.setMonth(nextMonth.getMonth()+1);
+  const nm=nextMonth.getFullYear()+'-'+String(nextMonth.getMonth()+1).padStart(2,'0');
+  t.recurEnd=nm;
+  await saveDB();renderTx();showToast('下月起停止');
 }
 function renderAll(){renderCards();renderTx();}
 
@@ -436,15 +459,16 @@ function renderApp(){
     <div class="fl"><label>购买日期</label><input type="date" id="fDate"/></div>
   </div>
   <div class="fl"><label>物品</label><input type="text" id="fItem" placeholder="买了什么？"/></div>
-  <div class="fl"><label>备注（用途等）</label><input type="text" id="fNote" placeholder="出差补买、生日礼物..."/></div>
+  <div class="fg2"><div class="fl"><label>类型</label><select id="fType" onchange="onTypeChange()"><option value="once">一次性</option><option value="installment">分期（无息）</option><option value="recurring">Recurring 订阅</option></select></div><div class="fl" id="recurEndRow" style="display:none"><label>结束月份</label><input type="month" id="fRecurEnd" placeholder="不填 = 长期"/></div></div>
+  <div class="fl"><label>备注（用途等）</label><input type="text" id="fNote" placeholder="备注..."/></div>
   <div class="fl"><label>金额 &amp; 货币</label>
     <div class="amt-row">
       <input type="number" id="fAmt" placeholder="0.00" min="0.01" step="0.01" inputmode="decimal" oninput="updatePreview()"/>
       <select id="fCur" onchange="updatePreview()">${buildCurOpts('USD')}</select>
     </div>
   </div>
-  <div class="fg2">
-    <div class="fl"><label>分期</label><select id="fInst" onchange="updatePreview()"><option value="1">不分期</option><option value="2">2期（无息）</option><option value="3">3期（无息）</option><option value="4">4期（无息）</option><option value="6">6期（无息）</option><option value="12">12期（无息）</option></select></div>
+  <div class="fg2" id="instRow" style="display:none">
+    <div class="fl"><label>分期数</label><select id="fInst" onchange="updatePreview()"><option value="1">不分期</option><option value="2">2期（无息）</option><option value="3">3期（无息）</option><option value="4">4期（无息）</option><option value="6">6期（无息）</option><option value="12">12期（无息）</option></select></div>
     <div class="fl"><label>半刚需折扣</label><select id="fAdj" onchange="onAdjChange()"><option value="1">全额 (100%)</option><option value="0.8">轻刚需 (80%)</option><option value="0.6">半刚需 (60%)</option><option value="0.4">强刚需 (40%)</option><option value="c">自定义...</option></select></div>
   </div>
   <div class="fl" id="adjRow"><label>自定义比例 (0–1)</label><input type="number" id="fAdjC" placeholder="例如 0.75" min="0.01" max="1" step="0.05" inputmode="decimal" oninput="updatePreview()"/></div>
