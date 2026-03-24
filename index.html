@@ -385,9 +385,16 @@ function renderTx(){
     const cur=t.currency||'USD';const sym=CURRENCIES[cur]||'$';
     const showOrig=cur!=='USD';
     const cny='≈ ¥'+(t.charge*fxRate).toFixed(0);
-    const noteHtml='<div class="tx-note" id="note-wrap-'+t.id+'">'+(t.note?'<span class="tx-note-text">'+t.note+'</span>':'')+'<span class="tx-note-edit" onclick="showNoteEdit(\''+t.id+'\')">'+(t.note?'编辑':'+ 备注')+'</span></div>';
+    const noteEditBtn='<span class="tx-note-edit" data-noteid="'+t.id+'">'+( t.note?'编辑':'+备注')+'</span>';
+    const noteHtml='<div class="tx-note" id="note-wrap-'+t.id+'">'+( t.note?'<span class="tx-note-text">'+t.note+'</span>':'')+noteEditBtn+'</div>';
     return '<div class="tx"><div class="tx-left"><div class="tx-name">'+t.item+tags.join('')+'</div>'+noteHtml+'<div class="tx-meta">'+t.member+' · '+fmtDate(t.date)+(showOrig?' · '+sym+(cur==='JPY'?t.originalAmt.toFixed(0):t.originalAmt.toFixed(2)):'')+'</div></div><div class="tx-right"><div class="tx-amt">-$'+t.charge.toFixed(2)+'</div><div class="tx-cny">'+cny+'</div><span class="tx-del" onclick="deleteTx(\''+t.id+'\')">删除</span></div></div>';
   }).join('');
+  list.onclick=function(e){
+    const ne=e.target.closest('[data-noteid]');
+    if(ne){showNoteEdit(ne.dataset.noteid);return;}
+    const dl=e.target.closest('[data-delid]');
+    if(dl){deleteTx(dl.dataset.delid);}
+  };
 }
 function renderAll(){renderCards();renderTx();}
 
