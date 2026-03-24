@@ -239,7 +239,7 @@ function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth
 function fmtDate(s){if(!s)return'';const p=s.split('-');return p.length===3?p[1]+'/'+p[2]:s;}
 function getUsed(member){return(DB.bal[ym()][member]||{used:0}).used||0;}
 function applyOverspend(amount,used){if(used-ALLOW>=THRESH)return+(amount*MULT).toFixed(2);const after=used+amount;if(after-ALLOW>THRESH){const norm=Math.max(0,ALLOW+THRESH-used);return+(norm+(amount-norm)*MULT).toFixed(2);}return+amount.toFixed(2);}
-function calcCharge(amount,adj,inst,sc,used){const per=amount/sc;const total=per*adj*(1+(inst>1?inst/100:0));return applyOverspend(total/inst,used);}
+function calcCharge(amount,adj,inst,sc,used){const per=amount/sc;const total=per*adj;return applyOverspend(total/inst,used);}
 function splitActive(){return Array.from(document.querySelectorAll('.tb.on')).map(b=>b.dataset.n);}
 
 function updatePreview(){
@@ -259,7 +259,7 @@ function updatePreview(){
   const sym=CURRENCIES[cur]||'$';
   let h='本月计入 <span class="hi">$'+charge.toFixed(2)+'</span>';
   if(cur!=='USD')h+=' (原'+sym+(cur==='JPY'?rawAmt.toFixed(0):rawAmt.toFixed(2))+')';
-  if(inst>1)h+='，共'+inst+'期，总计 $'+((amt/(1+splits.length))*adj*(1+inst/100)).toFixed(2);
+  if(inst>1)h+='，共'+inst+'期（无息），每期 $'+((amt/(1+splits.length))*adj/inst).toFixed(2);
   if(adj<1)h+='，折扣'+(adj*100).toFixed(0)+'%';
   if(splits.length)h+='，'+(1+splits.length)+'人平摊';
   if(used+charge>ALLOW+THRESH)h+=' <span class="warn">— 超支×1.2已触发</span>';
@@ -444,7 +444,7 @@ function renderApp(){
     </div>
   </div>
   <div class="fg2">
-    <div class="fl"><label>分期</label><select id="fInst" onchange="updatePreview()"><option value="1">不分期</option><option value="2">2期 (+2%)</option><option value="3">3期 (+3%)</option><option value="4">4期 (+4%)</option><option value="6">6期 (+6%)</option><option value="12">12期 (+12%)</option></select></div>
+    <div class="fl"><label>分期</label><select id="fInst" onchange="updatePreview()"><option value="1">不分期</option><option value="2">2期（无息）</option><option value="3">3期（无息）</option><option value="4">4期（无息）</option><option value="6">6期（无息）</option><option value="12">12期（无息）</option></select></div>
     <div class="fl"><label>半刚需折扣</label><select id="fAdj" onchange="onAdjChange()"><option value="1">全额 (100%)</option><option value="0.8">轻刚需 (80%)</option><option value="0.6">半刚需 (60%)</option><option value="0.4">强刚需 (40%)</option><option value="c">自定义...</option></select></div>
   </div>
   <div class="fl" id="adjRow"><label>自定义比例 (0–1)</label><input type="number" id="fAdjC" placeholder="例如 0.75" min="0.01" max="1" step="0.05" inputmode="decimal" oninput="updatePreview()"/></div>
