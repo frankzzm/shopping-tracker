@@ -4,510 +4,952 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
-<meta name="apple-mobile-web-app-title" content="è´­ç©é¢åº¦"/>
-<title>è´­ç©é¢åº¦è¿½è¸ª</title>
+<meta name="apple-mobile-web-app-title" content="购物额度"/>
+<title>购物额度追踪</title>
 <style>
-:root{--bg:#fff;--bg2:#f5f5f5;--bg3:#eee;--text:#1a1a1a;--text2:#666;--text3:#999;--border:rgba(0,0,0,.12);--border2:rgba(0,0,0,.22);--blue:#378ADD;--blue-bg:#E6F1FB;--blue-text:#185FA5;--red:#E24B4A;--red-bg:#FCEBEB;--red-text:#A32D2D;--amber-bg:#FAEEDA;--amber-text:#854F0B;--green-bg:#E1F5EE;--green-text:#0F6E56;--radius:12px;--radius-sm:8px}
-@media(prefers-color-scheme:dark){:root{--bg:#1c1c1e;--bg2:#2c2c2e;--bg3:#3a3a3c;--text:#f2f2f7;--text2:#aeaeb2;--text3:#636366;--border:rgba(255,255,255,.1);--border2:rgba(255,255,255,.2);--blue-bg:#0c2d4a;--blue-text:#85B7EB;--red-bg:#3a1a1a;--red-text:#F09595;--amber-bg:#3a2800;--amber-text:#FAC775;--green-bg:#0a2a1e;--green-text:#5DCAA5}}
+:root{
+  --bg:#fff;--bg2:#f5f5f5;--bg3:#e8e8e8;
+  --text:#1a1a1a;--text2:#666;--text3:#999;
+  --border:rgba(0,0,0,.1);--border2:rgba(0,0,0,.2);
+  --blue:#378ADD;--blue-bg:#E6F1FB;--blue-text:#185FA5;
+  --red:#E24B4A;--red-bg:#FCEBEB;--red-text:#A32D2D;
+  --amber-bg:#FAEEDA;--amber-text:#854F0B;
+  --green-bg:#E1F5EE;--green-text:#0F6E56;
+  --r:12px;--rs:8px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1c1e;--bg2:#2c2c2e;--bg3:#3a3a3c;
+  --text:#f2f2f7;--text2:#aeaeb2;--text3:#636366;
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.18);
+  --blue-bg:#0c2d4a;--blue-text:#85B7EB;
+  --red-bg:#3a1a1a;--red-text:#F09595;
+  --amber-bg:#3a2800;--amber-text:#FAC775;
+  --green-bg:#0a2a1e;--green-text:#5DCAA5;
+}}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;background:var(--bg2);color:var(--text);min-height:100vh}
 .app{max-width:480px;margin:0 auto;padding:16px 16px 60px}
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-top:8px}
-.header-title{font-size:22px;font-weight:600}
-.header-right{display:flex;align-items:center;gap:8px}
-.header-ym{font-size:13px;color:var(--text3)}
-.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--bg3);flex-shrink:0;cursor:pointer}
+
+/* header */
+.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-top:8px}
+.hdr-title{font-size:22px;font-weight:700}
+.hdr-right{display:flex;align-items:center;gap:8px}
+.sync-label{font-size:11px;color:var(--text3)}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--bg3);cursor:pointer;flex-shrink:0;transition:background .3s}
 .sync-dot.ok{background:#5DCAA5}
 .sync-dot.err{background:var(--red)}
 .sync-dot.busy{background:#EF9F27;animation:pulse .8s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.sync-label{font-size:11px;color:var(--text3)}
 
-.fx-bar{background:var(--bg);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px}
+/* fx bar */
+.fx-bar{background:var(--bg);border-radius:var(--r);padding:12px 16px;margin-bottom:14px}
 .fx-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.fx-rate-txt{font-size:13px;color:var(--text2);flex:1;min-width:100px}
-.fx-rate-txt strong{color:var(--text);font-weight:600}
-.fx-inputs{display:flex;align-items:center;gap:6px}
-.fx-inputs input{width:76px;font-size:15px;padding:6px 8px;border:.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg2);color:var(--text);text-align:right}
-.fx-inputs select{font-size:13px;padding:6px 6px;border:.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg2);color:var(--text);appearance:none;-webkit-appearance:none;padding-right:4px}
+.fx-label{font-size:13px;color:var(--text2);flex:1;min-width:80px}
+.fx-label b{color:var(--text)}
+.fx-inputs{display:flex;align-items:center;gap:5px}
+.fx-inputs input{width:68px;font-size:15px;padding:5px 7px;border:.5px solid var(--border2);border-radius:var(--rs);background:var(--bg2);color:var(--text);text-align:right}
+.fx-inputs select{font-size:13px;padding:5px 4px;border:.5px solid var(--border2);border-radius:var(--rs);background:var(--bg2);color:var(--text);appearance:none;-webkit-appearance:none}
 .fx-arrow{color:var(--text3);font-size:13px}
-.fx-result{font-size:15px;font-weight:600;color:var(--blue-text);min-width:72px}
-.fx-updated{font-size:11px;color:var(--text3);margin-top:6px}
+.fx-result{font-size:15px;font-weight:600;color:var(--blue-text);min-width:64px}
+.fx-updated{font-size:11px;color:var(--text3);margin-top:5px}
 
-.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:16px}
-.mc{background:var(--bg);border:.5px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;transition:border .15s}
+/* cards */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.mc{background:var(--bg);border:.5px solid var(--border);border-radius:var(--r);padding:14px;cursor:pointer;transition:border .12s}
 .mc.sel{border:1.5px solid var(--blue)}
-.mc-name{font-size:11px;color:var(--text3);margin-bottom:5px;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
-.mc-bal{font-size:26px;font-weight:700;color:var(--text);line-height:1}.mc-bal.neg{color:var(--red)}
+.mc-name{font-size:11px;color:var(--text3);margin-bottom:5px;font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.mc-bal{font-size:26px;font-weight:700;line-height:1}
+.mc-bal.neg{color:var(--red)}
 .mc-used{font-size:12px;color:var(--text3);margin-top:4px}
 .bar-bg{height:3px;background:var(--bg3);border-radius:2px;margin-top:10px;overflow:hidden}
 .bar-fill{height:100%;border-radius:2px;background:var(--blue);transition:width .3s}
-.bar-fill.warn{background:#EF9F27}.bar-fill.over{background:var(--red)}
-.mc-pill{display:inline-block;font-size:10px;padding:2px 6px;border-radius:8px;margin-top:6px;font-weight:500}
-.pill-over{background:var(--red-bg);color:var(--red-text)}.pill-pnlt{background:var(--amber-bg);color:var(--amber-text)}
+.bar-fill.warn{background:#EF9F27}
+.bar-fill.over{background:var(--red)}
+.pill{display:inline-block;font-size:10px;padding:2px 6px;border-radius:8px;margin-top:5px;font-weight:500}
+.pill-over{background:var(--red-bg);color:var(--red-text)}
+.pill-pen{background:var(--amber-bg);color:var(--amber-text)}
 
-.section{background:var(--bg);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
-.section-header{padding:14px 16px 0;display:flex;justify-content:space-between;align-items:center}
-.section-title{font-size:15px;font-weight:600}
-.form-body{padding:12px 16px 16px;display:flex;flex-direction:column;gap:12px}
+/* sections */
+.sec{background:var(--bg);border-radius:var(--r);margin-bottom:14px;overflow:hidden}
+.sec-hdr{padding:14px 16px 0;display:flex;justify-content:space-between;align-items:center}
+.sec-title{font-size:15px;font-weight:600}
+.form-body{padding:12px 16px 16px;display:flex;flex-direction:column;gap:11px}
 .fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.fl{display:flex;flex-direction:column;gap:5px}
+.fl{display:flex;flex-direction:column;gap:4px}
 label{font-size:12px;color:var(--text2);font-weight:500}
-input,select{font-size:16px;padding:10px 12px;border:.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg2);color:var(--text);width:100%;appearance:none;-webkit-appearance:none}
-input[type="date"]{font-size:15px}
-input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(55,138,221,.15)}
-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
-.amt-row{display:grid;grid-template-columns:1fr 80px;gap:8px}
-.amt-row select{padding:10px 6px;padding-right:24px;background-position:right 6px center;font-size:14px}
-.toggle-row{display:flex;gap:6px;flex-wrap:wrap}
+input,select{font-size:16px;padding:9px 11px;border:.5px solid var(--border2);border-radius:var(--rs);background:var(--bg2);color:var(--text);width:100%;appearance:none;-webkit-appearance:none}
+input[type=date]{font-size:15px}
+input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(55,138,221,.12)}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
+.amt-row{display:grid;grid-template-columns:1fr 72px;gap:8px}
+.amt-row select{padding:9px 5px;padding-right:20px;background-position:right 4px center;font-size:14px}
+.toggle-row{display:flex;gap:6px}
 .tb{font-size:13px;padding:7px 14px;border:.5px solid var(--border2);border-radius:20px;background:transparent;color:var(--text2);cursor:pointer;font-family:inherit;transition:all .12s}
 .tb.on{background:var(--blue-bg);border-color:var(--blue);color:var(--blue-text);font-weight:500}
 .tb:disabled{opacity:.3;cursor:default}
-.preview{font-size:13px;color:var(--text2);line-height:1.5;padding:10px 12px;background:var(--bg2);border-radius:var(--radius-sm);min-height:42px}
-.preview .hi{color:var(--text);font-weight:600}.preview .warn{color:var(--red)}.preview.empty{color:var(--text3);font-style:italic}
-.add-btn{width:100%;padding:13px;font-size:15px;font-weight:600;border:none;border-radius:var(--radius-sm);background:var(--blue);color:#fff;cursor:pointer;font-family:inherit;transition:opacity .12s,transform .1s}
-.add-btn:active{opacity:.85;transform:scale(.99)}.add-btn:disabled{opacity:.5;cursor:default}
-#adjRow{display:none}#adjRow.show{display:flex}
+.preview{font-size:13px;color:var(--text2);line-height:1.5;padding:9px 11px;background:var(--bg2);border-radius:var(--rs)}
+.preview .hi{color:var(--text);font-weight:600}
+.preview .warn{color:var(--red)}
+.preview.empty{color:var(--text3);font-style:italic}
+.add-btn{width:100%;padding:13px;font-size:15px;font-weight:600;border:none;border-radius:var(--rs);background:var(--blue);color:#fff;cursor:pointer;font-family:inherit}
+.add-btn:active{opacity:.85}
+.add-btn:disabled{opacity:.5;cursor:default}
 
-.tx-filter{padding:10px 16px;border-bottom:.5px solid var(--border)}
-.tx-filter select{font-size:13px;padding:6px 28px 6px 10px;width:auto}
-.tx{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 16px;border-bottom:.5px solid var(--border);gap:10px}
+/* tx */
+.tx-bar{padding:10px 16px;border-bottom:.5px solid var(--border);display:flex;gap:8px}
+.tx-bar select{font-size:13px;padding:5px 26px 5px 9px;width:auto}
+.tx{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 16px;border-bottom:.5px solid var(--border);gap:10px}
 .tx:last-child{border-bottom:none}
 .tx-left{flex:1;min-width:0}
-.tx-name{font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tx-note{font-size:12px;color:var(--text3);margin-top:2px;display:flex;align-items:center;gap:4px}
-.tx-note-text{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tx-note-edit{font-size:11px;color:var(--blue-text);cursor:pointer;flex-shrink:0;white-space:nowrap}
-.tx-note-input{font-size:12px;padding:4px 8px;border:.5px solid var(--border2);border-radius:6px;background:var(--bg2);color:var(--text);width:100%;margin-top:4px}
+.tx-name{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-note-row{font-size:12px;color:var(--text3);margin-top:2px;display:flex;align-items:center;gap:5px}
+.tx-note-text{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx-note-btn{color:var(--blue-text);cursor:pointer;flex-shrink:0}
+.tx-note-input{font-size:13px;padding:4px 8px;border:.5px solid var(--border2);border-radius:6px;background:var(--bg2);color:var(--text);width:100%;margin-top:3px}
 .tx-meta{font-size:12px;color:var(--text3);margin-top:2px}
 .tx-right{text-align:right;flex-shrink:0}
-.tx-amt{font-size:14px;font-weight:600;color:var(--text)}
+.tx-amt{font-size:14px;font-weight:600}
 .tx-cny{font-size:11px;color:var(--text3);margin-top:1px}
-.tx-del{font-size:11px;color:var(--text3);cursor:pointer;margin-top:4px;display:block}
-.tx-del:active{color:var(--red)}
-.tag{display:inline-block;font-size:10px;padding:1px 5px;border-radius:6px;margin-left:4px;vertical-align:middle;font-weight:500}
-.ti{background:var(--blue-bg);color:var(--blue-text)}.ts{background:var(--green-bg);color:var(--green-text)}.ta{background:var(--amber-bg);color:var(--amber-text)}.tp{background:var(--red-bg);color:var(--red-text)}
-.empty-state{text-align:center;padding:32px 16px;font-size:13px;color:var(--text3)}
+.tx-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:3px}
+.tx-btn{font-size:11px;cursor:pointer;background:none;border:none;padding:0;font-family:inherit}
+.tx-btn.edit{color:var(--blue-text)}
+.tx-btn.stop{color:var(--red-text)}
+.tx-btn.del{color:var(--text3)}
+.tx-btn.del:active{color:var(--red)}
+.tag{display:inline-block;font-size:10px;padding:1px 5px;border-radius:5px;margin-left:4px;vertical-align:middle;font-weight:500}
+.t-inst{background:var(--blue-bg);color:var(--blue-text)}
+.t-aa{background:var(--green-bg);color:var(--green-text)}
+.t-disc{background:var(--amber-bg);color:var(--amber-text)}
+.t-pen{background:var(--red-bg);color:var(--red-text)}
+.t-rec{background:var(--green-bg);color:var(--green-text)}
+.empty-state{text-align:center;padding:28px 16px;font-size:13px;color:var(--text3)}
 
-.madj-body{padding:12px 16px 16px;display:flex;flex-direction:column;gap:12px}
-.madj-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.madj-btn{padding:11px 6px;font-size:13px;font-weight:600;border:none;border-radius:var(--radius-sm);cursor:pointer;font-family:inherit}
-.madj-btn:active{opacity:.75}
-.madj-btn.plus{background:var(--green-bg);color:var(--green-text)}.madj-btn.minus{background:var(--red-bg);color:var(--red-text)}.madj-btn.setbal{background:var(--amber-bg);color:var(--amber-text)}
+/* adjust */
+.adj-body{padding:12px 16px 16px;display:flex;flex-direction:column;gap:11px}
+.adj-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.adj-btn{padding:10px 4px;font-size:13px;font-weight:600;border:none;border-radius:var(--rs);cursor:pointer;font-family:inherit}
+.adj-btn:active{opacity:.75}
+.adj-btn.plus{background:var(--green-bg);color:var(--green-text)}
+.adj-btn.minus{background:var(--red-bg);color:var(--red-text)}
+.adj-btn.setb{background:var(--amber-bg);color:var(--amber-text)}
 .log-wrap{border-top:.5px solid var(--border);margin:4px -16px -16px}
-.log-toggle{font-size:12px;color:var(--blue-text);background:none;border:none;cursor:pointer;padding:10px 16px;display:block;font-family:inherit;width:100%;text-align:left}
-.log-entry{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 16px;border-bottom:.5px solid var(--border);gap:10px}
+.log-btn{font-size:12px;color:var(--blue-text);background:none;border:none;cursor:pointer;padding:10px 16px;display:block;font-family:inherit;width:100%;text-align:left}
+.log-entry{display:flex;justify-content:space-between;padding:9px 16px;border-bottom:.5px solid var(--border);gap:10px}
 .log-entry:last-child{border-bottom:none}
 .log-left{flex:1;min-width:0}
-.log-desc{font-size:13px;color:var(--text)}.log-meta{font-size:11px;color:var(--text3);margin-top:2px}
+.log-desc{font-size:13px}
+.log-sub{font-size:11px;color:var(--text3);margin-top:1px}
 .log-amt{font-size:13px;font-weight:600;flex-shrink:0}
-.log-amt.pos{color:var(--green-text)}.log-amt.neg2{color:var(--red-text)}.log-amt.setc{color:var(--amber-text)}
+.log-amt.pos{color:var(--green-text)}
+.log-amt.neg{color:var(--red-text)}
+.log-amt.set{color:var(--amber-text)}
+
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:200;display:flex;align-items:flex-end;justify-content:center}
+.modal{background:var(--bg);border-radius:var(--r) var(--r) 0 0;padding:20px 16px 40px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.modal-close{font-size:22px;color:var(--text3);cursor:pointer;background:none;border:none;font-family:inherit;line-height:1}
+.modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.btn-ok{padding:12px;font-size:14px;font-weight:600;border:none;border-radius:var(--rs);background:var(--blue);color:#fff;cursor:pointer;font-family:inherit}
+.btn-cancel{padding:12px;font-size:14px;font-weight:600;border:.5px solid var(--border2);border-radius:var(--rs);background:transparent;color:var(--text2);cursor:pointer;font-family:inherit}
+
 .danger-btn{font-size:12px;color:var(--red-text);background:none;border:none;cursor:pointer;padding:4px;font-family:inherit}
 .toast-wrap{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:999;pointer-events:none}
 .toast{background:var(--text);color:var(--bg);font-size:13px;padding:8px 16px;border-radius:20px;opacity:0;transition:opacity .2s;white-space:nowrap}
 .toast.show{opacity:1}
-.spinner-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:12px}
-.spinner-wrap p{font-size:14px;color:var(--text3)}
+.spin-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:12px}
+.spin-wrap p{font-size:14px;color:var(--text3)}
 .spinner{width:28px;height:28px;border:2.5px solid var(--bg3);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-<div class="app" id="app"><div class="spinner-wrap"><div class="spinner"></div><p>æ­£å¨åæ­¥æ°æ®...</p></div></div>
+<div class="app" id="app">
+  <div class="spin-wrap"><div class="spinner"></div><p>正在连接...</p></div>
+</div>
+<div id="editModal" style="display:none"></div>
 <div class="toast-wrap"><div class="toast" id="toast"></div></div>
 <script>
-const ALLOW=500,THRESH=200,MULT=1.2;
-const MEMBERS=['Frank','Lea'];
-const FB_URL='https://my-project-78818-acdd8-default-rtdb.firebaseio.com/shopping.json';
-let DB={txs:{},bal:{},adjLog:[],lastYM:''},saving=false,saveQueued=false;
-let fxRate=7.25,fxUpdated='';
+// ─── 常量 ────────────────────────────────────────
+const ALLOW = 500, THRESH = 200, MULT = 1.2;
+const MEMBERS = ['Frank', 'Lea'];
+const FB = 'https://my-project-78818-acdd8-default-rtdb.firebaseio.com/shopping.json';
 
-const CURRENCIES={USD:'$',CNY:'Â¥',EUR:'â¬',GBP:'Â£',JPY:'Â¥',HKD:'HK$'};
+// 货币：USD / CNY / JPY 三种
+const CUR = { USD: '$', CNY: '¥', JPY: '¥' };
 
-// ââ exchange rate ââ
-async function fetchRate(){
-  try{
-    const r=await fetch('https://api.exchangerate-api.com/v4/latest/USD');
-    const d=await r.json();
-    fxRate=d.rates.CNY||7.25;
-    fxUpdated=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
-    const el=document.getElementById('fxRateVal');
-    if(el)el.textContent=fxRate.toFixed(4);
-    const upd=document.getElementById('fxUpdatedTxt');
-    if(upd)upd.textContent='æ´æ°äº '+fxUpdated;
-    updateFxResult();
-  }catch(e){}
-}
+// ─── 状态 ────────────────────────────────────────
+// 数据结构说明：
+//   DB.txs[月份]   = 该月消费记录数组
+//   DB.bal[月份][人名].used = 该月已用金额（每月独立，不跨月累积）
+//   DB.adjLog      = 手动调整历史
+//
+// 余额计算：$500 - DB.bal[当月][人名].used
+// 月份切换：新月份 used 从 0 开始，旧月份数据保留不动
 
-function toUSD(amt,cur){
-  if(cur==='USD')return amt;
-  const toUSDRate={CNY:1/fxRate,EUR:1/0.93,GBP:1/0.79,JPY:1/149,HKD:1/7.83};
-  return amt*(toUSDRate[cur]||1);
-}
-function fromUSD(amt,cur){
-  if(cur==='USD')return amt;
-  const fromUSDRate={CNY:fxRate,EUR:0.93,GBP:0.79,JPY:149,HKD:7.83};
-  return amt*(fromUSDRate[cur]||1);
-}
+let DB = { txs: {}, bal: {}, adjLog: [] };
+let saving = false, saveQueued = false;
+let fxRate = 7.25, fxTs = '';
 
-function updateFxResult(){
-  const amt=parseFloat(document.getElementById('fxAmt')?.value)||0;
-  const from=document.getElementById('fxFrom')?.value||'USD';
-  const to=document.getElementById('fxTo')?.value||'CNY';
-  const usd=toUSD(amt,from);
-  const result=fromUSD(usd,to);
-  const sym=CURRENCIES[to]||'';
-  const el=document.getElementById('fxResult');
-  if(el)el.textContent=sym+(to==='JPY'?result.toFixed(0):result.toFixed(2));
-}
+// ─── 工具函数 ────────────────────────────────────
+const ym = () => {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+};
+const today = () => {
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+};
+const fmtDate = s => {
+  if (!s) return '';
+  const p = s.split('-');
+  return p.length === 3 ? p[1]+'/'+p[2] : s;
+};
+const sym = c => CUR[c] || '$';
 
-// ââ JSONBin ââ
-async function readBin(){const r=await fetch(FB_URL);if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();return d||{txs:{},bal:{},adjLog:[],lastYM:''};}
-async function writeBin(rec){const r=await fetch(FB_URL,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(rec)});if(!r.ok)throw new Error('HTTP '+r.status);}
+// ─── 货币换算 ────────────────────────────────────
+const toUSD = (amt, c) => {
+  if (c === 'USD') return amt;
+  if (c === 'CNY') return amt / fxRate;
+  if (c === 'JPY') return amt / 149;
+  return amt;
+};
+const fromUSD = (amt, c) => {
+  if (c === 'USD') return amt;
+  if (c === 'CNY') return amt * fxRate;
+  if (c === 'JPY') return amt * 149;
+  return amt;
+};
 
-function setSyncStatus(state,msg){
-  const dot=document.getElementById('syncDot');
-  const lbl=document.getElementById('syncLabel');
-  if(dot)dot.className='sync-dot '+state;
-  if(lbl)lbl.textContent=msg||'';
-}
+// ─── 同步状态 ────────────────────────────────────
+const setSyncStatus = (state, msg) => {
+  const dot = document.getElementById('syncDot');
+  const lbl = document.getElementById('syncLabel');
+  if (dot) dot.className = 'sync-dot ' + state;
+  if (lbl) lbl.textContent = msg || '';
+};
 
-async function init(){
-  try{
-    setSyncStatus('busy','åæ­¥ä¸­...');
-    DB=await readBin();
-    if(!DB.txs)DB.txs={};if(!DB.bal)DB.bal={};if(!DB.adjLog)DB.adjLog=[];
+// ─── Firebase ────────────────────────────────────
+const fbRead = async () => {
+  const r = await fetch(FB);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return await r.json() || { txs: {}, bal: {}, adjLog: [] };
+};
+const fbWrite = async data => {
+  const r = await fetch(FB, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+};
+
+// ─── 初始化 ────────────────────────────────────────
+const init = async () => {
+  // 先显示本地缓存
+  const cached = localStorage.getItem('sc');
+  if (cached) {
+    try { DB = JSON.parse(cached); } catch(e) {}
     ensureMonth();
-    setSyncStatus('ok','å·²åæ­¥');
-  }catch(e){
-    setSyncStatus('err','åæ­¥å¤±è´¥');
-    const local=localStorage.getItem('shopping_local');
-    if(local)try{DB=JSON.parse(local);}catch(_){}
-    ensureMonth();
-    showToast('æ æ³è¿æ¥äºç«¯ï¼ä½¿ç¨æ¬å°æ°æ®');
+    renderApp();
   }
-  renderApp();
+  // 再从 Firebase 同步
+  setSyncStatus('busy', '同步中...');
+  try {
+    const fresh = await fbRead();
+    DB = fresh;
+    if (!DB.txs) DB.txs = {};
+    if (!DB.bal) DB.bal = {};
+    if (!DB.adjLog) DB.adjLog = [];
+    ensureMonth();
+    localStorage.setItem('sc', JSON.stringify(DB));
+    setSyncStatus('ok', '已同步');
+    if (document.getElementById('cards')) renderAll();
+    else renderApp();
+  } catch(e) {
+    setSyncStatus('err', '离线');
+    if (!cached) renderApp();
+    showToast('无法连接，使用本地数据');
+  }
   fetchRate();
-  // auto-refresh every 30s
-  setInterval(async()=>{
-    if(saving)return;
-    try{
-      const fresh=await readBin();
-      if(JSON.stringify(fresh)!==JSON.stringify(DB)){
-        DB=fresh;if(!DB.txs)DB.txs={};if(!DB.bal)DB.bal={};if(!DB.adjLog)DB.adjLog=[];
-        ensureMonth();renderAll();setSyncStatus('ok','å·²åæ­¥');
+  // 每30秒自动刷新
+  setInterval(async () => {
+    if (saving) return;
+    try {
+      const fresh = await fbRead();
+      if (JSON.stringify(fresh) !== JSON.stringify(DB)) {
+        DB = fresh;
+        if (!DB.txs) DB.txs = {};
+        if (!DB.bal) DB.bal = {};
+        if (!DB.adjLog) DB.adjLog = [];
+        ensureMonth();
+        localStorage.setItem('sc', JSON.stringify(DB));
+        renderAll();
+        setSyncStatus('ok', '已同步');
       }
-    }catch(e){setSyncStatus('err','åæ­¥å¤±è´¥');}
-  },30000);
-}
+    } catch(e) { setSyncStatus('err', '离线'); }
+  }, 30000);
+};
 
-async function saveDB(){
-  localStorage.setItem('shopping_local',JSON.stringify(DB));
-  if(saving){saveQueued=true;return;}
-  saving=true;setSyncStatus('busy','ä¿å­ä¸­...');
-  try{
-    await writeBin(DB);
-    setSyncStatus('ok','å·²åæ­¥');
-  }catch(e){
-    setSyncStatus('err','åæ­¥å¤±è´¥');
-    showToast('åæ­¥å¤±è´¥ï¼æ°æ®å·²å­æ¬å°');
-  }finally{
-    saving=false;
-    if(saveQueued){saveQueued=false;saveDB();}
+const manualSync = async () => {
+  setSyncStatus('busy', '同步中...');
+  try {
+    const fresh = await fbRead();
+    DB = fresh;
+    if (!DB.txs) DB.txs = {};
+    if (!DB.bal) DB.bal = {};
+    if (!DB.adjLog) DB.adjLog = [];
+    ensureMonth();
+    localStorage.setItem('sc', JSON.stringify(DB));
+    renderAll();
+    setSyncStatus('ok', '已同步');
+    showToast('数据已刷新');
+  } catch(e) {
+    setSyncStatus('err', '离线');
+    showToast('同步失败，请检查网络');
   }
-}
+};
 
-function ensureMonth(){
-  const m=ym();
-  if(DB.lastYM&&DB.lastYM!==m){DB.bal[m]={};MEMBERS.forEach(n=>{DB.bal[m][n]={used:0};});}
-  if(!DB.bal[m])DB.bal[m]={};
-  MEMBERS.forEach(n=>{if(!DB.bal[m][n])DB.bal[m][n]={used:0};});
-  if(!DB.txs[m])DB.txs[m]=[];
-  DB.lastYM=m;
-}
+const saveDB = async () => {
+  localStorage.setItem('sc', JSON.stringify(DB));
+  if (saving) { saveQueued = true; return; }
+  saving = true;
+  setSyncStatus('busy', '保存中...');
+  try {
+    await fbWrite(DB);
+    setSyncStatus('ok', '已同步');
+  } catch(e) {
+    setSyncStatus('err', '同步失败');
+    showToast('同步失败，已存本地');
+  } finally {
+    saving = false;
+    if (saveQueued) { saveQueued = false; saveDB(); }
+  }
+};
 
-function ym(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
-function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function fmtDate(s){if(!s)return'';const p=s.split('-');return p.length===3?p[1]+'/'+p[2]:s;}
-function getUsed(member){return(DB.bal[ym()][member]||{used:0}).used||0;}
-function applyOverspend(amount,used){if(used-ALLOW>=THRESH)return+(amount*MULT).toFixed(2);const after=used+amount;if(after-ALLOW>THRESH){const norm=Math.max(0,ALLOW+THRESH-used);return+(norm+(amount-norm)*MULT).toFixed(2);}return+amount.toFixed(2);}
-function calcCharge(amount,adj,inst,sc,used){const per=amount/sc;const total=per*adj;return applyOverspend(total/inst,used);}
-function splitActive(){return Array.from(document.querySelectorAll('.tb.on')).map(b=>b.dataset.n);}
+// ─── 月份初始化 ──────────────────────────────────
+// 核心逻辑：每月 used 从 0 开始，跨月数据互不影响
+const ensureMonth = () => {
+  const m = ym();
+  // 只初始化当前月，绝不修改其他月份
+  if (!DB.bal[m]) DB.bal[m] = {};
+  MEMBERS.forEach(n => {
+    if (!DB.bal[m][n]) DB.bal[m][n] = { used: 0 };
+  });
+  if (!DB.txs[m]) DB.txs[m] = [];
+};
 
-function onTypeChange(){
-  const t=document.getElementById('fType').value;
-  document.getElementById('instRow').style.display=t==='installment'?'grid':'none';
-  document.getElementById('recurEndRow').style.display=t==='recurring'?'flex':'none';
+// ─── 汇率 ─────────────────────────────────────────
+const fetchRate = async () => {
+  try {
+    const r = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+    const d = await r.json();
+    fxRate = d.rates.CNY || 7.25;
+    fxTs = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+    const el = document.getElementById('fxRateVal');
+    if (el) el.textContent = fxRate.toFixed(4);
+    const upd = document.getElementById('fxTs');
+    if (upd) upd.textContent = '更新于 ' + fxTs;
+    updateFxResult();
+  } catch(e) {}
+};
+
+const updateFxResult = () => {
+  const amt = parseFloat(document.getElementById('fxAmt')?.value) || 0;
+  const from = document.getElementById('fxFrom')?.value || 'USD';
+  const to = document.getElementById('fxTo')?.value || 'CNY';
+  const result = fromUSD(toUSD(amt, from), to);
+  const el = document.getElementById('fxResult');
+  if (el) el.textContent = sym(to) + result.toFixed(to === 'JPY' ? 0 : 2);
+};
+
+const buildCurOpts = sel =>
+  Object.keys(CUR).map(k =>
+    '<option value="'+k+'"'+(k===sel?' selected':'')+'>'+k+'</option>'
+  ).join('');
+
+// ─── 消费计算 ─────────────────────────────────────
+// 本月已用金额
+const getUsed = (member, month) =>
+  (DB.bal[month || ym()][member] || { used: 0 }).used || 0;
+
+// 超支惩罚计算
+const applyPenalty = (amount, used) => {
+  if (used - ALLOW >= THRESH) return +(amount * MULT).toFixed(2);
+  const after = used + amount;
+  if (after - ALLOW > THRESH) {
+    const norm = Math.max(0, ALLOW + THRESH - used);
+    return +(norm + (amount - norm) * MULT).toFixed(2);
+  }
+  return +amount.toFixed(2);
+};
+
+// 计算实际扣款
+const calcCharge = (usdAmt, adj, inst, splits, used) => {
+  const perPerson = usdAmt / splits;
+  const total = perPerson * adj;  // 无息
+  return applyPenalty(total / inst, used);
+};
+
+const getActiveSplits = () =>
+  Array.from(document.querySelectorAll('.tb.on')).map(b => b.dataset.n);
+
+// ─── 表单 ─────────────────────────────────────────
+const onTypeChange = () => {
+  const t = document.getElementById('fType').value;
+  document.getElementById('instRow').style.display = t === 'installment' ? 'grid' : 'none';
+};
+
+const onWhoChange = () => {
+  const who = document.getElementById('fWho').value;
+  document.querySelectorAll('.tb').forEach(b => {
+    if (b.dataset.n === who) { b.classList.remove('on'); b.disabled = true; }
+    else b.disabled = false;
+  });
   updatePreview();
-}
-function updatePreview(){
-  const who=document.getElementById('fWho').value;
-  const rawAmt=parseFloat(document.getElementById('fAmt').value)||0;
-  const cur=document.getElementById('fCur').value;
-  const amt=toUSD(rawAmt,cur);
-  const inst=parseInt(document.getElementById('fInst').value)||1;
-  let adj=parseFloat(document.getElementById('fAdj').value);
-  if(isNaN(adj))adj=parseFloat(document.getElementById('fAdjC').value)||1;
-  const splits=splitActive();
-  const used=getUsed(who);
-  const pv=document.getElementById('preview');
-  if(!rawAmt){pv.innerHTML='å¡«åéé¢åä¼æ¾ç¤ºå®éè®¡å¥éé¢';pv.className='preview empty';return;}
-  const charge=calcCharge(amt,adj,inst,1+splits.length,used);
-  pv.className='preview';
-  const sym=CURRENCIES[cur]||'$';
-  let h='æ¬æè®¡å¥ <span class="hi">$'+charge.toFixed(2)+'</span>';
-  if(cur!=='USD')h+=' (å'+sym+(cur==='JPY'?rawAmt.toFixed(0):rawAmt.toFixed(2))+')';
-  const txType=document.getElementById('fType')?.value||'once';
-  if(txType==='recurring')h+='ï¼æ¯ææ£é¤';
-  else if(inst>1)h+='ï¼å±'+inst+'æï¼æ æ¯ï¼ï¼æ¯æ $'+((amt/(1+splits.length))*adj/inst).toFixed(2);
-  if(adj<1)h+='ï¼ææ£'+(adj*100).toFixed(0)+'%';
-  if(splits.length)h+='ï¼'+(1+splits.length)+'äººå¹³æ';
-  if(used+charge>ALLOW+THRESH)h+=' <span class="warn">â è¶æ¯Ã1.2å·²è§¦å</span>';
-  pv.innerHTML=h;
-}
-function onAdjChange(){document.getElementById('adjRow').className='fl'+(document.getElementById('fAdj').value==='c'?' show':'');updatePreview();}
-function onWhoChange(){const who=document.getElementById('fWho').value;document.querySelectorAll('.tb').forEach(b=>{if(b.dataset.n===who){b.classList.remove('on');b.disabled=true;}else b.disabled=false;});updatePreview();}
-function toggleSplit(btn){btn.classList.toggle('on');updatePreview();}
+};
 
-async function addTx(){
-  const who=document.getElementById('fWho').value;
-  const rawAmt=parseFloat(document.getElementById('fAmt').value);
-  const cur=document.getElementById('fCur').value;
-  const amt=toUSD(rawAmt,cur);
-  const item=document.getElementById('fItem').value.trim();
-  const note=document.getElementById('fNote').value.trim();
-  const dv=document.getElementById('fDate').value||today();
-  if(!item||!rawAmt||rawAmt<=0){showToast('è¯·å¡«åç©ååéé¢');return;}
-  let adj=parseFloat(document.getElementById('fAdj').value);
-  if(isNaN(adj))adj=parseFloat(document.getElementById('fAdjC').value)||1;
-  const inst=parseInt(document.getElementById('fInst').value)||1;
-  const splits=splitActive();
-  const sc=1+splits.length;
-  const m=ym();
-  const btn=document.getElementById('addBtn');btn.disabled=true;
-  function rec(member,label,sw){
-    const used=getUsed(member);const charge=calcCharge(amt,adj,inst,sc,used);
-    const txType=document.getElementById('fType').value;
-    const recurEnd=document.getElementById('fRecurEnd').value||null;
-    DB.txs[m].unshift({id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),member,item:label,note,originalAmt:rawAmt,currency:cur,adj,inst,splitWith:sw,charge,date:dv,type:txType,recurEnd});
-    DB.bal[m][member].used=+(used+charge).toFixed(2);
+const onAdjChange = () => {
+  document.getElementById('adjCustomRow').style.display =
+    document.getElementById('fAdj').value === 'c' ? 'flex' : 'none';
+  updatePreview();
+};
+
+const toggleSplit = btn => { btn.classList.toggle('on'); updatePreview(); };
+
+const getAdj = () => {
+  const v = document.getElementById('fAdj').value;
+  return v === 'c' ? (parseFloat(document.getElementById('fAdjCustom').value) || 1) : (parseFloat(v) || 1);
+};
+
+const updatePreview = () => {
+  const who = document.getElementById('fWho')?.value;
+  const rawAmt = parseFloat(document.getElementById('fAmt')?.value) || 0;
+  const cur = document.getElementById('fCur')?.value || 'USD';
+  const usdAmt = toUSD(rawAmt, cur);
+  const inst = parseInt(document.getElementById('fInst')?.value) || 1;
+  const adj = getAdj();
+  const txType = document.getElementById('fType')?.value || 'once';
+  const splits = getActiveSplits();
+  const used = who ? getUsed(who) : 0;
+  const pv = document.getElementById('preview');
+  if (!pv) return;
+  if (!rawAmt) {
+    pv.innerHTML = '填写金额后会显示实际计入金额';
+    pv.className = 'preview empty';
+    return;
   }
-  rec(who,item,splits);splits.forEach(o=>rec(o,item+' (shared)',[who]));
-  await saveDB();renderAll();resetForm();btn.disabled=false;showToast('å·²æ·»å ');
-}
+  const charge = calcCharge(usdAmt, adj, inst, 1 + splits.length, used);
+  pv.className = 'preview';
+  let h = '本月计入 <span class="hi">$' + charge.toFixed(2) + '</span>';
+  if (cur !== 'USD') h += '（原 ' + sym(cur) + rawAmt.toFixed(cur === 'JPY' ? 0 : 2) + '）';
+  if (txType === 'recurring') h += '，每月自动计入';
+  else if (inst > 1) h += '，共 ' + inst + ' 期（无息），每期 $' + ((usdAmt/(1+splits.length))*adj/inst).toFixed(2);
+  if (adj < 1) h += '，折扣 ' + (adj*100).toFixed(0) + '%';
+  if (splits.length) h += '，' + (1+splits.length) + ' 人平摊';
+  if (used + charge > ALLOW + THRESH) h += ' <span class="warn">— 超支×1.2 已触发</span>';
+  pv.innerHTML = h;
+};
 
-function resetForm(){
-  document.getElementById('fAmt').value='';document.getElementById('fItem').value='';
-  document.getElementById('fNote').value='';document.getElementById('fDate').value=today();
-  document.getElementById('fInst').value='1';
-  document.getElementById('fType').value='once';
-  document.getElementById('fRecurEnd').value='';
-  document.getElementById('instRow').style.display='none';
-  document.getElementById('recurEndRow').style.display='none';document.getElementById('fAdj').value='1';
-  document.getElementById('adjRow').className='fl';
-  document.querySelectorAll('.tb.on').forEach(b=>b.classList.remove('on'));
-  const pv=document.getElementById('preview');pv.innerHTML='å¡«åéé¢åä¼æ¾ç¤ºå®éè®¡å¥éé¢';pv.className='preview empty';
-}
+// ─── 添加消费 ─────────────────────────────────────
+const addTx = async () => {
+  const who = document.getElementById('fWho').value;
+  const rawAmt = parseFloat(document.getElementById('fAmt').value);
+  const cur = document.getElementById('fCur').value;
+  const usdAmt = toUSD(rawAmt, cur);
+  const item = document.getElementById('fItem').value.trim();
+  const note = document.getElementById('fNote').value.trim();
+  const dv = document.getElementById('fDate').value || today();
+  const txType = document.getElementById('fType').value;
+  const adj = getAdj();
+  const inst = parseInt(document.getElementById('fInst').value) || 1;
+  const splits = getActiveSplits();
+  const sc = 1 + splits.length;
+  const m = ym();
 
-async function deleteTx(id){
-  const m=ym();const i=DB.txs[m].findIndex(t=>t.id===id);if(i<0)return;
-  const t=DB.txs[m][i];DB.bal[m][t.member].used=Math.max(0,+(DB.bal[m][t.member].used-t.charge).toFixed(2));
-  DB.txs[m].splice(i,1);await saveDB();renderAll();showToast('å·²å é¤');
-}
+  if (!item || !rawAmt || rawAmt <= 0) { showToast('请填写物品和金额'); return; }
 
-function showNoteEdit(id){
-  const m=ym();const t=DB.txs[m].find(x=>x.id===id);if(!t)return;
-  const wrap=document.getElementById('note-wrap-'+id);
-  if(!wrap)return;
-  wrap.innerHTML='<input class="tx-note-input" id="note-inp-'+id+'" value="'+((t.note||'').replace(/"/g,'&quot;'))+'" placeholder="æ·»å å¤æ³¨..."/>'
-    +'<span style="font-size:11px;color:var(--blue-text);cursor:pointer;margin-top:4px;display:block" onclick="saveNote(\''+id+'\')">ä¿å­</span>';
-  document.getElementById('note-inp-'+id)?.focus();
-}
+  const btn = document.getElementById('addBtn');
+  btn.disabled = true;
 
-async function saveNote(id){
-  const m=ym();const t=DB.txs[m].find(x=>x.id===id);if(!t)return;
-  const inp=document.getElementById('note-inp-'+id);
-  if(!inp)return;
-  t.note=inp.value.trim();
-  await saveDB();renderTx();showToast('å¤æ³¨å·²æ´æ°');
-}
-
-async function doAdj(type){
-  const who=document.getElementById('aWho').value;
-  const amt=parseFloat(document.getElementById('aAmt').value);
-  const note=document.getElementById('aNote').value.trim();
-  if(!amt||amt<=0){showToast('è¯·è¾å¥éé¢');return;}
-  const m=ym();if(!DB.bal[m][who])DB.bal[m][who]={used:0};
-  const cu=DB.bal[m][who].used||0;const cb=+(ALLOW-cu).toFixed(2);
-  let nu,desc,la,lc;
-  if(type==='add'){nu=Math.max(0,+(cu-amt).toFixed(2));desc='å¢å  '+who+' ä½é¢ $'+amt.toFixed(2);la='+$'+amt.toFixed(2);lc='pos';}
-  else if(type==='sub'){nu=+(cu+amt).toFixed(2);desc='æ£å '+who+' ä½é¢ $'+amt.toFixed(2);la='-$'+amt.toFixed(2);lc='neg2';}
-  else{nu=+(ALLOW-amt).toFixed(2);desc='è®¾ç½® '+who+' ä½é¢ä¸º $'+amt.toFixed(2);la='= $'+amt.toFixed(2);lc='setc';}
-  DB.bal[m][who].used=nu;if(!DB.adjLog)DB.adjLog=[];
-  DB.adjLog.unshift({who,type,amt,note,desc,logAmt:la,logCls:lc,before:cb,after:+(ALLOW-nu).toFixed(2),date:today()});
-  document.getElementById('aAmt').value='';document.getElementById('aNote').value='';
-  await saveDB();renderAll();if(adjLogOpen)renderAdjLog();showToast('å·²è°æ´');
-}
-
-let adjLogOpen=false;
-function toggleAdjLog(){adjLogOpen=!adjLogOpen;document.getElementById('adjLog').style.display=adjLogOpen?'block':'none';document.getElementById('logToggleBtn').textContent=adjLogOpen?'æ¶èµ·è°æ´åå² â´':'æ¥çè°æ´åå² â¾';if(adjLogOpen)renderAdjLog();}
-function renderAdjLog(){
-  const log=DB.adjLog||[];const el=document.getElementById('adjLog');
-  if(!log.length){el.innerHTML='<div class="empty-state">ææ è°æ´è®°å½</div>';return;}
-  el.innerHTML=log.slice(0,40).map(e=>'<div class="log-entry"><div class="log-left"><div class="log-desc">'+e.desc+(e.note?' <span style="color:var(--text3)">â '+e.note+'</span>':'')+'</div><div class="log-meta">'+fmtDate(e.date)+' Â· $'+e.before.toFixed(0)+' â $'+e.after.toFixed(0)+'</div></div><div class="log-amt '+e.logCls+'">'+e.logAmt+'</div></div>').join('');
-}
-
-async function confirmReset(){
-  if(confirm('ç¡®å®éç½®æ¬ææææ°æ®ï¼ï¼ä¸å¯æ¢å¤ï¼')){
-    const m=ym();DB.txs[m]=[];MEMBERS.forEach(n=>{DB.bal[m][n]={used:0};});
-    await saveDB();renderAll();showToast('å·²éç½®');
-  }
-}
-
-function renderCards(){
-  const m=ym();document.getElementById('ymLabel').textContent=m;
-  const fv=document.getElementById('fFilter').value;
-  document.getElementById('cards').innerHTML=MEMBERS.map(n=>{
-    const used=(DB.bal[m][n]||{used:0}).used||0;const bal=ALLOW-used;
-    const pct=Math.min(100,(used/ALLOW)*100);const isOver=used>ALLOW,isWarn=used>ALLOW*.8;
-    const bc=isOver?'over':isWarn?'warn':'';const sc=fv===n?' sel':'';
-    return '<div class="mc'+sc+'" onclick="filterTo(\''+n+'\')"><div class="mc-name">'+n+'</div><div class="mc-bal'+(bal<0?' neg':'')+'">$'+bal.toFixed(0)+'</div><div class="mc-used">å·²ç¨ $'+used.toFixed(0)+' / $'+ALLOW+'</div><div class="bar-bg"><div class="bar-fill '+bc+'" style="width:'+Math.min(100,pct).toFixed(1)+'%"></div></div>'+(isOver?'<span class="mc-pill pill-over">è¶ $'+(used-ALLOW).toFixed(0)+'</span>':'')+(used>ALLOW+THRESH?'<span class="mc-pill pill-pnlt">Ã1.2</span>':'')+'</div>';
-  }).join('');
-}
-function filterTo(n){const f=document.getElementById('fFilter');f.value=f.value===n?'':n;renderTx();renderCards();}
-
-function renderTx(){
-  const m=ym();const filter=document.getElementById('fFilter').value;
-  const txs=(DB.txs[m]||[]).filter(t=>!filter||t.member===filter);
-  const list=document.getElementById('txList');
-  if(!txs.length){list.innerHTML='<div class="empty-state">æ¬æææ è®°å½</div>';return;}
-  list.innerHTML=txs.map(t=>{
-    const tags=[];
-    if(t.type==='recurring'){
-      const recurTag='<span class="tag" style="background:var(--green-bg);color:var(--green-text)">æ¯æ</span>';
-      tags.push(recurTag);
-    } else if(t.inst>1)tags.push('<span class="tag ti">'+t.inst+'æ</span>');
-    if(t.splitWith&&t.splitWith.length)tags.push('<span class="tag ts">AA</span>');
-    if(t.adj<1)tags.push('<span class="tag ta">'+(t.adj*100).toFixed(0)+'%</span>');
-    const base=(t.originalAmt/(1+(t.splitWith||[]).length))*t.adj;
-    if(t.charge>base/t.inst*1.05)tags.push('<span class="tag tp">Ã1.2</span>');
-    const cur=t.currency||'USD';const sym=CURRENCIES[cur]||'$';
-    const showOrig=cur!=='USD';
-    const cny='â Â¥'+(t.charge*fxRate).toFixed(0);
-    const noteEditBtn='<span class="tx-note-edit" data-noteid="'+t.id+'">'+( t.note?'ç¼è¾':'+å¤æ³¨')+'</span>';
-    const noteHtml='<div class="tx-note" id="note-wrap-'+t.id+'">'+( t.note?'<span class="tx-note-text">'+t.note+'</span>':'')+noteEditBtn+'</div>';
-    const recurInfo = t.type==='recurring'
-      ? (t.recurEnd ? ' Â· è³ '+t.recurEnd : ' Â· é¿æ') + '<span style="margin-left:6px;font-size:11px;color:var(--red-text);cursor:pointer" data-stopid="'+t.id+'">[åæ­¢]</span>'
-      : '';
-    return '<div class="tx"><div class="tx-left"><div class="tx-name">'+t.item+tags.join('')+'</div>'+noteHtml+'<div class="tx-meta">'+t.member+' Â· '+fmtDate(t.date)+(showOrig?' Â· '+sym+(cur==='JPY'?t.originalAmt.toFixed(0):t.originalAmt.toFixed(2)):'')+recurInfo+'</div></div><div class="tx-right"><div class="tx-amt">-$'+t.charge.toFixed(2)+'</div><div class="tx-cny">'+cny+'</div><span class="tx-del" onclick="deleteTx(\''+t.id+'\')">å é¤</span></div></div>';
-  }).join('');
-  list.onclick=function(e){
-    const ne=e.target.closest('[data-noteid]');
-    if(ne){showNoteEdit(ne.dataset.noteid);return;}
-    const dl=e.target.closest('[data-delid]');
-    if(dl){deleteTx(dl.dataset.delid);return;}
-    const st=e.target.closest('[data-stopid]');
-    if(st){stopRecurring(st.dataset.stopid);}
+  const addRec = (member, label, sharedWith) => {
+    const used = getUsed(member);
+    const charge = calcCharge(usdAmt, adj, inst, sc, used);
+    DB.txs[m].unshift({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
+      member, item: label, note,
+      originalAmt: rawAmt, currency: cur,
+      adj, inst,
+      splitWith: sharedWith,
+      charge, date: dv,
+      type: txType, recurEnd: null
+    });
+    DB.bal[m][member].used = +(getUsed(member) + charge).toFixed(2);
   };
-}
-async function stopRecurring(id){
-  const m=ym();const t=(DB.txs[m]||[]).find(x=>x.id===id);
-  if(!t)return;
-  const nextMonth=new Date();nextMonth.setMonth(nextMonth.getMonth()+1);
-  const nm=nextMonth.getFullYear()+'-'+String(nextMonth.getMonth()+1).padStart(2,'0');
-  t.recurEnd=nm;
-  await saveDB();renderTx();showToast('ä¸æèµ·åæ­¢');
-}
-function renderAll(){renderCards();renderTx();}
 
+  addRec(who, item, splits);
+  splits.forEach(o => addRec(o, item + ' (shared)', [who]));
+
+  await saveDB();
+  renderAll();
+  resetForm();
+  btn.disabled = false;
+  showToast('已添加');
+};
+
+const resetForm = () => {
+  ['fAmt','fItem','fNote'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('fDate').value = today();
+  document.getElementById('fInst').value = '1';
+  document.getElementById('fAdj').value = '1';
+  document.getElementById('fType').value = 'once';
+  document.getElementById('fCur').value = 'USD';
+  document.getElementById('adjCustomRow').style.display = 'none';
+  document.getElementById('instRow').style.display = 'none';
+  document.querySelectorAll('.tb.on').forEach(b => b.classList.remove('on'));
+  const pv = document.getElementById('preview');
+  pv.innerHTML = '填写金额后会显示实际计入金额';
+  pv.className = 'preview empty';
+};
+
+// ─── 删除 ─────────────────────────────────────────
+const deleteTx = async id => {
+  const m = ym();
+  const idx = DB.txs[m].findIndex(t => t.id === id);
+  if (idx < 0) return;
+  const t = DB.txs[m][idx];
+  DB.bal[m][t.member].used = Math.max(0, +(DB.bal[m][t.member].used - t.charge).toFixed(2));
+  DB.txs[m].splice(idx, 1);
+  await saveDB();
+  renderAll();
+  showToast('已删除');
+};
+
+// ─── 停止 Recurring ───────────────────────────────
+const stopRecurring = async id => {
+  const m = ym();
+  const t = (DB.txs[m] || []).find(x => x.id === id);
+  if (!t) return;
+  const input = prompt('输入结束月份（YYYY-MM），直接确定 = 下月停止，取消 = 放弃');
+  if (input === null) return;
+  let end;
+  if (input.trim() === '') {
+    const d = new Date(); d.setMonth(d.getMonth() + 1);
+    end = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+  } else if (/^\d{4}-\d{2}$/.test(input.trim())) {
+    end = input.trim();
+  } else { showToast('格式不对，请用 YYYY-MM'); return; }
+  t.recurEnd = end;
+  await saveDB();
+  renderTx();
+  showToast('已设置结束于 ' + end);
+};
+
+// ─── 备注编辑 ─────────────────────────────────────
+const showNoteEdit = id => {
+  const m = ym();
+  const t = DB.txs[m].find(x => x.id === id);
+  if (!t) return;
+  const wrap = document.getElementById('nw-' + id);
+  if (!wrap) return;
+  wrap.innerHTML =
+    '<input class="tx-note-input" id="ni-'+id+'" value="'+(t.note||'').replace(/"/g,'&quot;')+'" placeholder="备注..."/>' +
+    '<span style="font-size:11px;color:var(--blue-text);cursor:pointer;margin-top:3px;display:block" data-savenote="'+id+'">保存</span>';
+  document.getElementById('ni-' + id)?.focus();
+};
+
+const saveNote = async id => {
+  const m = ym();
+  const t = DB.txs[m].find(x => x.id === id);
+  if (!t) return;
+  const inp = document.getElementById('ni-' + id);
+  if (!inp) return;
+  t.note = inp.value.trim();
+  await saveDB();
+  renderTx();
+  showToast('备注已更新');
+};
+
+// ─── 编辑记录 ─────────────────────────────────────
+const openEdit = id => {
+  const m = ym();
+  const t = DB.txs[m].find(x => x.id === id);
+  if (!t) return;
+  const cur = t.currency || 'USD';
+  const txType = t.type || 'once';
+  const modal = document.getElementById('editModal');
+  modal.style.display = 'block';
+  modal.innerHTML =
+    '<div class="overlay" id="mo">' +
+    '<div class="modal">' +
+    '<div class="modal-title">编辑记录 <button class="modal-close" id="mc">×</button></div>' +
+    '<div style="display:flex;flex-direction:column;gap:11px">' +
+    '<div class="fg2">' +
+    '<div class="fl"><label>购买人</label><select id="eWho"><option'+(t.member==='Frank'?' selected':'')+'>Frank</option><option'+(t.member==='Lea'?' selected':'')+'>Lea</option></select></div>' +
+    '<div class="fl"><label>购买日期</label><input type="date" id="eDate" value="'+(t.date||'')+'"/></div>' +
+    '</div>' +
+    '<div class="fl"><label>物品</label><input type="text" id="eItem" value="'+(t.item||'').replace(/"/g,'&quot;')+'"/></div>' +
+    '<div class="fl"><label>备注</label><input type="text" id="eNote" value="'+(t.note||'').replace(/"/g,'&quot;')+'" placeholder="备注..."/></div>' +
+    '<div class="fl"><label>金额 &amp; 货币</label><div class="amt-row">' +
+    '<input type="number" id="eAmt" value="'+(t.originalAmt||t.charge)+'" min="0.01" step="0.01" inputmode="decimal"/>' +
+    '<select id="eCur">'+buildCurOpts(cur)+'</select></div></div>' +
+    '<div class="fl"><label>类型</label><select id="eType">' +
+    '<option value="once"'+(txType==='once'?' selected':'')+'>一次性</option>' +
+    '<option value="installment"'+(txType==='installment'?' selected':'')+'>分期（无息）</option>' +
+    '<option value="recurring"'+(txType==='recurring'?' selected':'')+'>Recurring 订阅</option>' +
+    '</select></div>' +
+    '<div class="fg2" id="eInstRow" style="display:'+(txType==='installment'?'grid':'none')+'">' +
+    '<div class="fl"><label>分期数</label><select id="eInst">' +
+    [1,2,3,4,6,12].map(n=>'<option value="'+n+'"'+(t.inst==n?' selected':'')+'>'+n+(n===1?'（不分期）':'期')+'</option>').join('') +
+    '</select></div>' +
+    '<div class="fl"><label>折扣比例</label><input type="number" id="eAdj" value="'+(t.adj||1)+'" min="0.1" max="1" step="0.05"/></div>' +
+    '</div>' +
+    '<div class="modal-btns"><button class="btn-ok" id="ms">保存</button><button class="btn-cancel" id="mcc">取消</button></div>' +
+    '</div></div></div>';
+
+  document.getElementById('mc').onclick = closeEditModal;
+  document.getElementById('mcc').onclick = closeEditModal;
+  document.getElementById('mo').onclick = e => { if (e.target === document.getElementById('mo')) closeEditModal(); };
+  document.getElementById('ms').onclick = () => saveEdit(id);
+  document.getElementById('eType').onchange = () => {
+    document.getElementById('eInstRow').style.display =
+      document.getElementById('eType').value === 'installment' ? 'grid' : 'none';
+  };
+};
+
+const closeEditModal = () => { document.getElementById('editModal').style.display = 'none'; };
+
+const saveEdit = async id => {
+  const m = ym();
+  const idx = DB.txs[m].findIndex(x => x.id === id);
+  if (idx < 0) return;
+  const t = DB.txs[m][idx];
+  const oldCharge = t.charge, oldMember = t.member;
+  const newMember = document.getElementById('eWho').value;
+  const rawAmt = parseFloat(document.getElementById('eAmt').value) || t.originalAmt;
+  const cur = document.getElementById('eCur').value;
+  const usdAmt = toUSD(rawAmt, cur);
+  const adj = parseFloat(document.getElementById('eAdj')?.value) || t.adj || 1;
+  const inst = parseInt(document.getElementById('eInst')?.value) || t.inst || 1;
+  const txType = document.getElementById('eType').value;
+
+  if (!DB.bal[m][oldMember]) DB.bal[m][oldMember] = { used: 0 };
+  DB.bal[m][oldMember].used = Math.max(0, +(DB.bal[m][oldMember].used - oldCharge).toFixed(2));
+
+  const sc = 1 + (t.splitWith || []).length;
+  const newCharge = calcCharge(usdAmt, adj, inst, sc, getUsed(newMember));
+
+  t.member = newMember;
+  t.item = document.getElementById('eItem').value.trim() || t.item;
+  t.note = document.getElementById('eNote').value.trim();
+  t.date = document.getElementById('eDate').value || t.date;
+  t.originalAmt = rawAmt; t.currency = cur;
+  t.adj = adj; t.inst = inst; t.type = txType; t.charge = newCharge;
+
+  if (!DB.bal[m][newMember]) DB.bal[m][newMember] = { used: 0 };
+  DB.bal[m][newMember].used = +((DB.bal[m][newMember].used || 0) + newCharge).toFixed(2);
+
+  closeEditModal();
+  await saveDB();
+  renderAll();
+  showToast('已更新');
+};
+
+// ─── 手动调整额度 ─────────────────────────────────
+const doAdj = async type => {
+  const who = document.getElementById('aWho').value;
+  const amt = parseFloat(document.getElementById('aAmt').value);
+  const note = document.getElementById('aNote').value.trim();
+  if (!amt || amt <= 0) { showToast('请输入金额'); return; }
+  const m = ym();
+  if (!DB.bal[m][who]) DB.bal[m][who] = { used: 0 };
+  const cu = DB.bal[m][who].used || 0;
+  const cb = +(ALLOW - cu).toFixed(2);
+  let nu, desc, la, lc;
+  if (type === 'add') {
+    nu = Math.max(0, +(cu - amt).toFixed(2));
+    desc = '增加 ' + who + ' 余额 $' + amt.toFixed(2);
+    la = '+$' + amt.toFixed(2); lc = 'pos';
+  } else if (type === 'sub') {
+    nu = +(cu + amt).toFixed(2);
+    desc = '扣减 ' + who + ' 余额 $' + amt.toFixed(2);
+    la = '-$' + amt.toFixed(2); lc = 'neg';
+  } else {
+    nu = +(ALLOW - amt).toFixed(2);
+    desc = '设置 ' + who + ' 余额为 $' + amt.toFixed(2);
+    la = '= $' + amt.toFixed(2); lc = 'set';
+  }
+  DB.bal[m][who].used = nu;
+  if (!DB.adjLog) DB.adjLog = [];
+  DB.adjLog.unshift({ who, type, amt, note, desc, la, lc, before: cb, after: +(ALLOW-nu).toFixed(2), date: today() });
+  document.getElementById('aAmt').value = '';
+  document.getElementById('aNote').value = '';
+  await saveDB();
+  renderAll();
+  if (adjLogOpen) renderAdjLog();
+  showToast('已调整');
+};
+
+let adjLogOpen = false;
+const toggleAdjLog = () => {
+  adjLogOpen = !adjLogOpen;
+  document.getElementById('adjLog').style.display = adjLogOpen ? 'block' : 'none';
+  document.getElementById('logBtn').textContent = adjLogOpen ? '收起调整历史 ▴' : '查看调整历史 ▾';
+  if (adjLogOpen) renderAdjLog();
+};
+const renderAdjLog = () => {
+  const log = DB.adjLog || [];
+  const el = document.getElementById('adjLog');
+  if (!log.length) { el.innerHTML = '<div class="empty-state">暂无调整记录</div>'; return; }
+  el.innerHTML = log.slice(0, 40).map(e =>
+    '<div class="log-entry">' +
+    '<div class="log-left">' +
+    '<div class="log-desc">' + e.desc + (e.note ? ' <span style="color:var(--text3)">— ' + e.note + '</span>' : '') + '</div>' +
+    '<div class="log-sub">' + fmtDate(e.date) + ' · $' + e.before.toFixed(0) + ' → $' + e.after.toFixed(0) + '</div>' +
+    '</div><div class="log-amt ' + e.lc + '">' + e.la + '</div></div>'
+  ).join('');
+};
+
+const confirmReset = async () => {
+  if (confirm('确定重置本月所有数据？（不可恢复）')) {
+    const m = ym();
+    DB.txs[m] = [];
+    MEMBERS.forEach(n => { DB.bal[m][n] = { used: 0 }; });
+    await saveDB();
+    renderAll();
+    showToast('已重置');
+  }
+};
+
+// ─── 渲染 ─────────────────────────────────────────
+const renderCards = () => {
+  const m = ym();
+  document.getElementById('ymLabel').textContent = m;
+  const fv = document.getElementById('fFilter')?.value || '';
+  document.getElementById('cards').innerHTML = MEMBERS.map(n => {
+    const used = (DB.bal[m][n] || { used: 0 }).used || 0;
+    const bal = ALLOW - used;
+    const pct = Math.min(100, (used / ALLOW) * 100);
+    const isOver = used > ALLOW, isWarn = used > ALLOW * 0.8;
+    const bc = isOver ? 'over' : isWarn ? 'warn' : '';
+    const sc = fv === n ? ' sel' : '';
+    return '<div class="mc'+sc+'" data-m="'+n+'">' +
+      '<div class="mc-name">'+n+'</div>' +
+      '<div class="mc-bal'+(bal<0?' neg':'')+'">$'+bal.toFixed(0)+'</div>' +
+      '<div class="mc-used">已用 $'+used.toFixed(0)+' / $'+ALLOW+'</div>' +
+      '<div class="bar-bg"><div class="bar-fill '+bc+'" style="width:'+pct.toFixed(1)+'%"></div></div>' +
+      (isOver ? '<span class="pill pill-over">超 $'+(used-ALLOW).toFixed(0)+'</span>' : '') +
+      (used > ALLOW+THRESH ? '<span class="pill pill-pen">×1.2</span>' : '') +
+      '</div>';
+  }).join('');
+  document.getElementById('cards').onclick = e => {
+    const mc = e.target.closest('[data-m]');
+    if (!mc) return;
+    const f = document.getElementById('fFilter');
+    f.value = f.value === mc.dataset.m ? '' : mc.dataset.m;
+    renderTx(); renderCards();
+  };
+};
+
+const renderTx = () => {
+  // 月份选择器
+  const mSel = document.getElementById('mFilter');
+  const allMonths = Object.keys(DB.txs || {})
+    .filter(k => (DB.txs[k] || []).length > 0)
+    .sort().reverse();
+  const curYM = ym();
+  if (!allMonths.includes(curYM)) allMonths.unshift(curYM);
+  if (mSel) {
+    const cur = mSel.value && allMonths.includes(mSel.value) ? mSel.value : curYM;
+    mSel.innerHTML = allMonths.map(mo =>
+      '<option value="'+mo+'"'+(mo===cur?' selected':'')+'>'+mo+'</option>'
+    ).join('');
+    mSel.value = cur;
+  }
+  const m = mSel?.value || curYM;
+
+  const filter = document.getElementById('fFilter')?.value || '';
+  const txs = (DB.txs[m] || []).filter(t => !filter || t.member === filter);
+  const list = document.getElementById('txList');
+  if (!txs.length) { list.innerHTML = '<div class="empty-state">本月暂无记录</div>'; return; }
+
+  list.innerHTML = txs.map(t => {
+    const txType = t.type || 'once';
+    const tags = [];
+    if (txType === 'recurring') tags.push('<span class="tag t-rec">每月</span>');
+    else if (t.inst > 1) tags.push('<span class="tag t-inst">'+t.inst+'期</span>');
+    if (t.splitWith?.length) tags.push('<span class="tag t-aa">AA</span>');
+    if (t.adj < 1) tags.push('<span class="tag t-disc">'+(t.adj*100).toFixed(0)+'%</span>');
+    const base = (t.originalAmt / (1+(t.splitWith||[]).length)) * t.adj;
+    if (txType === 'once' && t.charge > base/t.inst*1.05) tags.push('<span class="tag t-pen">×1.2</span>');
+
+    const cur = t.currency || 'USD';
+    const showOrig = cur !== 'USD';
+    const cny = '≈ ¥' + (t.charge * fxRate).toFixed(0);
+    const recInfo = txType === 'recurring'
+      ? (t.recurEnd ? ' · 至 '+t.recurEnd : ' · 长期')
+      : '';
+
+    return '<div class="tx">' +
+      '<div class="tx-left">' +
+      '<div class="tx-name">'+t.item+tags.join('')+'</div>' +
+      '<div class="tx-note-row" id="nw-'+t.id+'">' +
+        (t.note ? '<span class="tx-note-text">'+t.note+'</span>' : '') +
+        '<span class="tx-note-btn" data-noteid="'+t.id+'">'+(t.note?'编辑':'+备注')+'</span>' +
+      '</div>' +
+      '<div class="tx-meta">'+t.member+' · '+fmtDate(t.date)+
+        (showOrig ? ' · '+sym(cur)+t.originalAmt.toFixed(cur==='JPY'?0:2) : '') +
+        recInfo+'</div>' +
+      '</div>' +
+      '<div class="tx-right">' +
+      '<div class="tx-amt">-$'+t.charge.toFixed(2)+'</div>' +
+      '<div class="tx-cny">'+cny+'</div>' +
+      '<div class="tx-actions">' +
+        (txType==='recurring'?'<button class="tx-btn stop" data-stopid="'+t.id+'">[停止]</button>':'') +
+        '<button class="tx-btn edit" data-editid="'+t.id+'">编辑</button>' +
+        '<button class="tx-btn del" data-delid="'+t.id+'">删除</button>' +
+      '</div>' +
+      '</div></div>';
+  }).join('');
+
+  list.onclick = e => {
+    const ne = e.target.closest('[data-noteid]'); if (ne) { showNoteEdit(ne.dataset.noteid); return; }
+    const sn = e.target.closest('[data-savenote]'); if (sn) { saveNote(sn.dataset.savenote); return; }
+    const st = e.target.closest('[data-stopid]'); if (st) { stopRecurring(st.dataset.stopid); return; }
+    const ed = e.target.closest('[data-editid]'); if (ed) { openEdit(ed.dataset.editid); return; }
+    const dl = e.target.closest('[data-delid]'); if (dl) { deleteTx(dl.dataset.delid); }
+  };
+};
+
+const renderAll = () => { renderCards(); renderTx(); };
+
+// ─── Toast ────────────────────────────────────────
 let toastTimer;
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2500);}
+const showToast = msg => {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+};
 
-function buildCurOpts(sel){return Object.keys(CURRENCIES).map(k=>'<option value="'+k+'"'+(k===sel?' selected':'')+'>'+k+'</option>').join('');}
+// ─── 渲染 App 框架 ────────────────────────────────
+const renderApp = () => {
+  document.getElementById('app').innerHTML =
+    // Header
+    '<div class="hdr">' +
+      '<span class="hdr-title">购物额度</span>' +
+      '<div class="hdr-right">' +
+        '<span id="ymLabel" style="font-size:13px;color:var(--text3)"></span>' +
+        '<span class="sync-label" id="syncLabel"></span>' +
+        '<div class="sync-dot" id="syncDot" onclick="manualSync()" title="点击刷新"></div>' +
+      '</div>' +
+    '</div>' +
 
-function renderApp(){
-  document.getElementById('app').innerHTML=`
-<div class="header">
-  <span class="header-title">è´­ç©é¢åº¦</span>
-  <div class="header-right">
-    <span class="header-ym" id="ymLabel"></span>
-    <span class="sync-label" id="syncLabel">è¿æ¥ä¸­...</span>
-    <div class="sync-dot busy" id="syncDot" onclick="manualSync()" title="ç¹å»æå¨åæ­¥"></div>
-  </div>
-</div>
+    // FX Bar
+    '<div class="fx-bar">' +
+      '<div class="fx-row">' +
+        '<div class="fx-label">1 USD = <b id="fxRateVal">'+fxRate.toFixed(4)+'</b> CNY</div>' +
+        '<div class="fx-inputs">' +
+          '<input type="number" id="fxAmt" value="1" min="0" step="any" oninput="updateFxResult()" style="width:65px"/>' +
+          '<select id="fxFrom" onchange="updateFxResult()">'+buildCurOpts('USD')+'</select>' +
+          '<span class="fx-arrow">→</span>' +
+          '<select id="fxTo" onchange="updateFxResult()">'+buildCurOpts('CNY')+'</select>' +
+          '<span class="fx-result" id="fxResult">¥'+fxRate.toFixed(2)+'</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="fx-updated" id="fxTs">正在获取汇率...</div>' +
+    '</div>' +
 
-<div class="fx-bar">
-  <div class="fx-row">
-    <div class="fx-rate-txt">1 USD = <strong id="fxRateVal">...</strong> CNY</div>
-    <div class="fx-inputs">
-      <input type="number" id="fxAmt" value="1" min="0" step="any" oninput="updateFxResult()" style="width:72px"/>
-      <select id="fxFrom" onchange="updateFxResult()">${buildCurOpts('USD')}</select>
-      <span class="fx-arrow">â</span>
-      <select id="fxTo" onchange="updateFxResult()">${buildCurOpts('CNY')}</select>
-      <span class="fx-result" id="fxResult">...</span>
-    </div>
-  </div>
-  <div class="fx-updated" id="fxUpdatedTxt">æ­£å¨è·åæ±ç...</div>
-</div>
+    // Cards
+    '<div class="cards" id="cards"></div>' +
 
-<div class="cards" id="cards"></div>
+    // Add form
+    '<div class="sec">' +
+      '<div class="sec-hdr"><span class="sec-title">添加消费</span></div>' +
+      '<div class="form-body">' +
+        '<div class="fg2">' +
+          '<div class="fl"><label>购买人</label><select id="fWho" onchange="onWhoChange()"><option>Frank</option><option>Lea</option></select></div>' +
+          '<div class="fl"><label>购买日期</label><input type="date" id="fDate"/></div>' +
+        '</div>' +
+        '<div class="fl"><label>物品</label><input type="text" id="fItem" placeholder="买了什么？"/></div>' +
+        '<div class="fl"><label>备注</label><input type="text" id="fNote" placeholder="备注..."/></div>' +
+        '<div class="fl"><label>金额 &amp; 货币</label>' +
+          '<div class="amt-row">' +
+            '<input type="number" id="fAmt" placeholder="0.00" min="0.01" step="0.01" inputmode="decimal" oninput="updatePreview()"/>' +
+            '<select id="fCur" onchange="updatePreview()">'+buildCurOpts('USD')+'</select>' +
+          '</div></div>' +
+        '<div class="fl"><label>类型</label>' +
+          '<select id="fType" onchange="onTypeChange()">' +
+            '<option value="once">一次性</option>' +
+            '<option value="installment">分期（无息）</option>' +
+            '<option value="recurring">Recurring 订阅</option>' +
+          '</select></div>' +
+        '<div class="fg2" id="instRow" style="display:none">' +
+          '<div class="fl"><label>分期数</label>' +
+            '<select id="fInst" onchange="updatePreview()">' +
+              '<option value="1">1期</option><option value="2">2期</option><option value="3">3期</option>' +
+              '<option value="4">4期</option><option value="6">6期</option><option value="12">12期</option>' +
+            '</select></div>' +
+          '<div class="fl"><label>半刚需折扣</label>' +
+            '<select id="fAdj" onchange="onAdjChange()">' +
+              '<option value="1">全额 (100%)</option>' +
+              '<option value="0.8">轻刚需 (80%)</option>' +
+              '<option value="0.6">半刚需 (60%)</option>' +
+              '<option value="0.4">强刚需 (40%)</option>' +
+              '<option value="c">自定义...</option>' +
+            '</select></div>' +
+        '</div>' +
+        '<div class="fl" id="adjCustomRow" style="display:none"><label>自定义比例 (0–1)</label>' +
+          '<input type="number" id="fAdjCustom" placeholder="例如 0.75" min="0.1" max="1" step="0.05" inputmode="decimal" oninput="updatePreview()"/></div>' +
+        '<div class="fl"><label>AA 制（与谁平摊）</label>' +
+          '<div class="toggle-row">' +
+            '<button class="tb" data-n="Frank" onclick="toggleSplit(this)">Frank</button>' +
+            '<button class="tb" data-n="Lea" onclick="toggleSplit(this)">Lea</button>' +
+          '</div></div>' +
+        '<div id="preview" class="preview empty">填写金额后会显示实际计入金额</div>' +
+        '<button class="add-btn" id="addBtn" onclick="addTx()">添加记录</button>' +
+      '</div>' +
+    '</div>' +
 
-<div class="section"><div class="section-header"><span class="section-title">æ·»å æ¶è´¹</span></div><div class="form-body">
-  <div class="fg2">
-    <div class="fl"><label>è´­ä¹°äºº</label><select id="fWho" onchange="onWhoChange()"><option>Frank</option><option>Lea</option></select></div>
-    <div class="fl"><label>è´­ä¹°æ¥æ</label><input type="date" id="fDate"/></div>
-  </div>
-  <div class="fl"><label>ç©å</label><input type="text" id="fItem" placeholder="ä¹°äºä»ä¹ï¼"/></div>
-  <div class="fg2"><div class="fl"><label>ç±»å</label><select id="fType" onchange="onTypeChange()"><option value="once">ä¸æ¬¡æ§</option><option value="installment">åæï¼æ æ¯ï¼</option><option value="recurring">Recurring è®¢é</option></select></div><div class="fl" id="recurEndRow" style="display:none"><label>ç»ææä»½</label><input type="month" id="fRecurEnd" placeholder="ä¸å¡« = é¿æ"/></div></div>
-  <div class="fl"><label>å¤æ³¨ï¼ç¨éç­ï¼</label><input type="text" id="fNote" placeholder="å¤æ³¨..."/></div>
-  <div class="fl"><label>éé¢ &amp; è´§å¸</label>
-    <div class="amt-row">
-      <input type="number" id="fAmt" placeholder="0.00" min="0.01" step="0.01" inputmode="decimal" oninput="updatePreview()"/>
-      <select id="fCur" onchange="updatePreview()">${buildCurOpts('USD')}</select>
-    </div>
-  </div>
-  <div class="fg2" id="instRow" style="display:none">
-    <div class="fl"><label>åææ°</label><select id="fInst" onchange="updatePreview()"><option value="1">ä¸åæ</option><option value="2">2æï¼æ æ¯ï¼</option><option value="3">3æï¼æ æ¯ï¼</option><option value="4">4æï¼æ æ¯ï¼</option><option value="6">6æï¼æ æ¯ï¼</option><option value="12">12æï¼æ æ¯ï¼</option></select></div>
-    <div class="fl"><label>ååéææ£</label><select id="fAdj" onchange="onAdjChange()"><option value="1">å¨é¢ (100%)</option><option value="0.8">è½»åé (80%)</option><option value="0.6">ååé (60%)</option><option value="0.4">å¼ºåé (40%)</option><option value="c">èªå®ä¹...</option></select></div>
-  </div>
-  <div class="fl" id="adjRow"><label>èªå®ä¹æ¯ä¾ (0â1)</label><input type="number" id="fAdjC" placeholder="ä¾å¦ 0.75" min="0.01" max="1" step="0.05" inputmode="decimal" oninput="updatePreview()"/></div>
-  <div class="fl"><label>AA å¶ï¼ä¸è°å¹³æï¼</label><div class="toggle-row"><button class="tb" data-n="Frank" onclick="toggleSplit(this)">Frank</button><button class="tb" data-n="Lea" onclick="toggleSplit(this)">Lea</button></div></div>
-  <div id="preview" class="preview empty">å¡«åéé¢åä¼æ¾ç¤ºå®éè®¡å¥éé¢</div>
-  <button class="add-btn" id="addBtn" onclick="addTx()">æ·»å è®°å½</button>
-</div></div>
+    // Manual adjust
+    '<div class="sec">' +
+      '<div class="sec-hdr"><span class="sec-title">手动调整额度</span></div>' +
+      '<div class="adj-body">' +
+        '<div class="fg2">' +
+          '<div class="fl"><label>对象</label><select id="aWho"><option>Frank</option><option>Lea</option></select></div>' +
+          '<div class="fl"><label>金额 ($)</label><input type="number" id="aAmt" placeholder="0.00" min="0.01" step="0.01" inputmode="decimal"/></div>' +
+        '</div>' +
+        '<div class="fl"><label>备注（选填）</label><input type="text" id="aNote" placeholder="调整原因..."/></div>' +
+        '<div class="adj-btns">' +
+          '<button class="adj-btn plus" onclick="doAdj(\'add\')">＋ 增加余额</button>' +
+          '<button class="adj-btn minus" onclick="doAdj(\'sub\')">－ 扣减余额</button>' +
+          '<button class="adj-btn setb" onclick="doAdj(\'set\')">设为此值</button>' +
+        '</div>' +
+        '<div class="log-wrap"><button class="log-btn" id="logBtn" onclick="toggleAdjLog()">查看调整历史 ▾</button>' +
+          '<div id="adjLog" style="display:none"></div></div>' +
+      '</div>' +
+    '</div>' +
 
-<div class="section"><div class="section-header"><span class="section-title">æå¨è°æ´é¢åº¦</span></div><div class="madj-body">
-  <div class="fg2">
-    <div class="fl"><label>å¯¹è±¡</label><select id="aWho"><option>Frank</option><option>Lea</option></select></div>
-    <div class="fl"><label>éé¢ ($)</label><input type="number" id="aAmt" placeholder="0.00" min="0.01" step="0.01" inputmode="decimal"/></div>
-  </div>
-  <div class="fl"><label>å¤æ³¨ï¼éå¡«ï¼</label><input type="text" id="aNote" placeholder="è°æ´åå ..."/></div>
-  <div class="madj-btns">
-    <button class="madj-btn plus" onclick="doAdj('add')">ï¼ å¢å ä½é¢</button>
-    <button class="madj-btn minus" onclick="doAdj('sub')">ï¼ æ£åä½é¢</button>
-    <button class="madj-btn setbal" onclick="doAdj('set')">è®¾ä¸ºæ­¤å¼</button>
-  </div>
-  <div class="log-wrap"><button class="log-toggle" id="logToggleBtn" onclick="toggleAdjLog()">æ¥çè°æ´åå² â¾</button><div id="adjLog" style="display:none"></div></div>
-</div></div>
+    // Transactions
+    '<div class="sec">' +
+      '<div class="sec-hdr" style="padding-bottom:0">' +
+        '<span class="sec-title">消费记录</span>' +
+        '<button class="danger-btn" onclick="confirmReset()">重置本月</button>' +
+      '</div>' +
+      '<div class="tx-bar">' +
+        '<select id="fFilter" onchange="renderTx()"><option value="">全部成员</option><option>Frank</option><option>Lea</option></select>' +
+        '<select id="mFilter" onchange="renderTx()"></select>' +
+      '</div>' +
+      '<div id="txList"></div>' +
+    '</div>';
 
-<div class="section"><div class="section-header" style="padding-bottom:0"><span class="section-title">æ¬æè®°å½</span><button class="danger-btn" onclick="confirmReset()">éç½®æ¬æ</button></div>
-  <div class="tx-filter"><select id="fFilter" onchange="renderTx()"><option value="">å¨é¨æå</option><option>Frank</option><option>Lea</option></select></div>
-  <div id="txList"></div>
-</div>`;
-  document.getElementById('fDate').value=today();
-  onWhoChange();renderAll();
-}
+  document.getElementById('fDate').value = today();
+  onWhoChange();
+  renderAll();
+};
 
-async function manualSync(){
-  setSyncStatus('busy','åæ­¥ä¸­...');
-  try{
-    const fresh=await readBin();
-    DB=fresh;if(!DB.txs)DB.txs={};if(!DB.bal)DB.bal={};if(!DB.adjLog)DB.adjLog=[];
-    ensureMonth();renderAll();setSyncStatus('ok','å·²åæ­¥');showToast('æ°æ®å·²å·æ°');
-  }catch(e){setSyncStatus('err','åæ­¥å¤±è´¥');showToast('åæ­¥å¤±è´¥ï¼è¯·æ£æ¥ç½ç»');}
-}
-
+// ─── 启动 ─────────────────────────────────────────
 init();
 </script>
 </body>
