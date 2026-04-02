@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
-<meta name="apple-mobile-web-app-title" content="购物额度"/>
-<title>购物额度追踪</title>
+<meta name="apple-mobile-web-app-title" content="è´­ç©é¢åº¦"/>
+<title>è´­ç©é¢åº¦è¿½è¸ª</title>
 <style>
 :root{--bg:#fff;--bg2:#f5f5f5;--bg3:#eee;--text:#1a1a1a;--text2:#666;--text3:#999;--border:rgba(0,0,0,.12);--border2:rgba(0,0,0,.22);--blue:#378ADD;--blue-bg:#E6F1FB;--blue-text:#185FA5;--red:#E24B4A;--red-bg:#FCEBEB;--red-text:#A32D2D;--amber-bg:#FAEEDA;--amber-text:#854F0B;--green-bg:#E1F5EE;--green-text:#0F6E56;--radius:12px;--radius-sm:8px}
 @media(prefers-color-scheme:dark){:root{--bg:#1c1c1e;--bg2:#2c2c2e;--bg3:#3a3a3c;--text:#f2f2f7;--text2:#aeaeb2;--text3:#636366;--border:rgba(255,255,255,.1);--border2:rgba(255,255,255,.2);--blue-bg:#0c2d4a;--blue-text:#85B7EB;--red-bg:#3a1a1a;--red-text:#F09595;--amber-bg:#3a2800;--amber-text:#FAC775;--green-bg:#0a2a1e;--green-text:#5DCAA5}}
@@ -114,7 +114,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 </style>
 </head>
 <body>
-<div class="app" id="app"><div class="spinner-wrap"><div class="spinner"></div><p>正在同步数据...</p></div></div>
+<div class="app" id="app"><div class="spinner-wrap"><div class="spinner"></div><p>æ­£å¨åæ­¥æ°æ®...</p></div></div>
 <div class="toast-wrap"><div class="toast" id="toast"></div></div>
 <script>
 const ALLOW=500,THRESH=200,MULT=1.2;
@@ -123,9 +123,9 @@ const FB_URL='https://my-project-78818-acdd8-default-rtdb.firebaseio.com/shoppin
 let DB={txs:{},bal:{},adjLog:[],lastYM:''},saving=false,saveQueued=false;
 let fxRate=7.25,fxUpdated='';
 
-const CURRENCIES={USD:'$',CNY:'¥',EUR:'€',GBP:'£',JPY:'¥',HKD:'HK$'};
+const CURRENCIES={USD:'$',CNY:'Â¥',EUR:'â¬',GBP:'Â£',JPY:'Â¥',HKD:'HK$'};
 
-// ── exchange rate ──
+// ââ exchange rate ââ
 async function fetchRate(){
   try{
     const r=await fetch('https://api.exchangerate-api.com/v4/latest/USD');
@@ -135,7 +135,7 @@ async function fetchRate(){
     const el=document.getElementById('fxRateVal');
     if(el)el.textContent=fxRate.toFixed(4);
     const upd=document.getElementById('fxUpdatedTxt');
-    if(upd)upd.textContent='更新于 '+fxUpdated;
+    if(upd)upd.textContent='æ´æ°äº '+fxUpdated;
     updateFxResult();
   }catch(e){}
 }
@@ -162,7 +162,7 @@ function updateFxResult(){
   if(el)el.textContent=sym+(to==='JPY'?result.toFixed(0):result.toFixed(2));
 }
 
-// ── JSONBin ──
+// ââ JSONBin ââ
 async function readBin(){const r=await fetch(FB_URL);if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();return d||{txs:{},bal:{},adjLog:[],lastYM:''};}
 async function writeBin(rec){const r=await fetch(FB_URL,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(rec)});if(!r.ok)throw new Error('HTTP '+r.status);}
 
@@ -175,17 +175,17 @@ function setSyncStatus(state,msg){
 
 async function init(){
   try{
-    setSyncStatus('busy','同步中...');
+    setSyncStatus('busy','åæ­¥ä¸­...');
     DB=await readBin();
     if(!DB.txs)DB.txs={};if(!DB.bal)DB.bal={};if(!DB.adjLog)DB.adjLog=[];
     ensureMonth();
-    setSyncStatus('ok','已同步');
+    setSyncStatus('ok','å·²åæ­¥');
   }catch(e){
-    setSyncStatus('err','同步失败');
+    setSyncStatus('err','åæ­¥å¤±è´¥');
     const local=localStorage.getItem('shopping_local');
     if(local)try{DB=JSON.parse(local);}catch(_){}
     ensureMonth();
-    showToast('无法连接云端，使用本地数据');
+    showToast('æ æ³è¿æ¥äºç«¯ï¼ä½¿ç¨æ¬å°æ°æ®');
   }
   renderApp();
   fetchRate();
@@ -196,22 +196,22 @@ async function init(){
       const fresh=await readBin();
       if(JSON.stringify(fresh)!==JSON.stringify(DB)){
         DB=fresh;if(!DB.txs)DB.txs={};if(!DB.bal)DB.bal={};if(!DB.adjLog)DB.adjLog=[];
-        ensureMonth();renderAll();setSyncStatus('ok','已同步');
+        ensureMonth();renderAll();setSyncStatus('ok','å·²åæ­¥');
       }
-    }catch(e){setSyncStatus('err','同步失败');}
+    }catch(e){setSyncStatus('err','åæ­¥å¤±è´¥');}
   },30000);
 }
 
 async function saveDB(){
   localStorage.setItem('shopping_local',JSON.stringify(DB));
   if(saving){saveQueued=true;return;}
-  saving=true;setSyncStatus('busy','保存中...');
+  saving=true;setSyncStatus('busy','ä¿å­ä¸­...');
   try{
     await writeBin(DB);
-    setSyncStatus('ok','已同步');
+    setSyncStatus('ok','å·²åæ­¥');
   }catch(e){
-    setSyncStatus('err','同步失败');
-    showToast('同步失败，数据已存本地');
+    setSyncStatus('err','åæ­¥å¤±è´¥');
+    showToast('åæ­¥å¤±è´¥ï¼æ°æ®å·²å­æ¬å°');
   }finally{
     saving=false;
     if(saveQueued){saveQueued=false;saveDB();}
@@ -252,18 +252,18 @@ function updatePreview(){
   const splits=splitActive();
   const used=getUsed(who);
   const pv=document.getElementById('preview');
-  if(!rawAmt){pv.innerHTML='填写金额后会显示实际计入金额';pv.className='preview empty';return;}
+  if(!rawAmt){pv.innerHTML='å¡«åéé¢åä¼æ¾ç¤ºå®éè®¡å¥éé¢';pv.className='preview empty';return;}
   const charge=calcCharge(amt,adj,inst,1+splits.length,used);
   pv.className='preview';
   const sym=CURRENCIES[cur]||'$';
-  let h='本月计入 <span class="hi">$'+charge.toFixed(2)+'</span>';
-  if(cur!=='USD')h+=' (原'+sym+(cur==='JPY'?rawAmt.toFixed(0):rawAmt.toFixed(2))+')';
+  let h='æ¬æè®¡å¥ <span class="hi">$'+charge.toFixed(2)+'</span>';
+  if(cur!=='USD')h+=' (å'+sym+(cur==='JPY'?rawAmt.toFixed(0):rawAmt.toFixed(2))+')';
   const txType=document.getElementById('fType')?.value||'once';
-  if(txType==='recurring')h+='，每月扣除';
-  else if(inst>1)h+='，共'+inst+'期（无息），每期 $'+((amt/(1+splits.length))*adj/inst).toFixed(2);
-  if(adj<1)h+='，折扣'+(adj*100).toFixed(0)+'%';
-  if(splits.length)h+='，'+(1+splits.length)+'人平摊';
-  if(used+charge>ALLOW+THRESH)h+=' <span class="warn">— 超支×1.2已触发</span>';
+  if(txType==='recurring')h+='ï¼æ¯ææ£é¤';
+  else if(inst>1)h+='ï¼å±'+inst+'æï¼æ æ¯ï¼ï¼æ¯æ $'+((amt/(1+splits.length))*adj/inst).toFixed(2);
+  if(adj<1)h+='ï¼ææ£'+(adj*100).toFixed(0)+'%';
+  if(splits.length)h+='ï¼'+(1+splits.length)+'äººå¹³æ';
+  if(used+charge>ALLOW+THRESH)h+=' <span class="warn">â è¶æ¯Ã1.2å·²è§¦å</span>';
   pv.innerHTML=h;
 }
 function onAdjChange(){document.getElementById('adjRow').className='fl'+(document.getElementById('fAdj').value==='c'?' show':'');updatePreview();}
@@ -278,7 +278,7 @@ async function addTx(){
   const item=document.getElementById('fItem').value.trim();
   const note=document.getElementById('fNote').value.trim();
   const dv=document.getElementById('fDate').value||today();
-  if(!item||!rawAmt||rawAmt<=0){showToast('请填写物品和金额');return;}
+  if(!item||!rawAmt||rawAmt<=0){showToast('è¯·å¡«åç©ååéé¢');return;}
   let adj=parseFloat(document.getElementById('fAdj').value);
   if(isNaN(adj))adj=parseFloat(document.getElementById('fAdjC').value)||1;
   const inst=parseInt(document.getElementById('fInst').value)||1;
@@ -294,7 +294,7 @@ async function addTx(){
     DB.bal[m][member].used=+(used+charge).toFixed(2);
   }
   rec(who,item,splits);splits.forEach(o=>rec(o,item+' (shared)',[who]));
-  await saveDB();renderAll();resetForm();btn.disabled=false;showToast('已添加');
+  await saveDB();renderAll();resetForm();btn.disabled=false;showToast('å·²æ·»å ');
 }
 
 function resetForm(){
@@ -307,21 +307,21 @@ function resetForm(){
   document.getElementById('recurEndRow').style.display='none';document.getElementById('fAdj').value='1';
   document.getElementById('adjRow').className='fl';
   document.querySelectorAll('.tb.on').forEach(b=>b.classList.remove('on'));
-  const pv=document.getElementById('preview');pv.innerHTML='填写金额后会显示实际计入金额';pv.className='preview empty';
+  const pv=document.getElementById('preview');pv.innerHTML='å¡«åéé¢åä¼æ¾ç¤ºå®éè®¡å¥éé¢';pv.className='preview empty';
 }
 
 async function deleteTx(id){
   const m=ym();const i=DB.txs[m].findIndex(t=>t.id===id);if(i<0)return;
   const t=DB.txs[m][i];DB.bal[m][t.member].used=Math.max(0,+(DB.bal[m][t.member].used-t.charge).toFixed(2));
-  DB.txs[m].splice(i,1);await saveDB();renderAll();showToast('已删除');
+  DB.txs[m].splice(i,1);await saveDB();renderAll();showToast('å·²å é¤');
 }
 
 function showNoteEdit(id){
   const m=ym();const t=DB.txs[m].find(x=>x.id===id);if(!t)return;
   const wrap=document.getElementById('note-wrap-'+id);
   if(!wrap)return;
-  wrap.innerHTML='<input class="tx-note-input" id="note-inp-'+id+'" value="'+((t.note||'').replace(/"/g,'&quot;'))+'" placeholder="添加备注..."/>'
-    +'<span style="font-size:11px;color:var(--blue-text);cursor:pointer;margin-top:4px;display:block" onclick="saveNote(\''+id+'\')">保存</span>';
+  wrap.innerHTML='<input class="tx-note-input" id="note-inp-'+id+'" value="'+((t.note||'').replace(/"/g,'&quot;'))+'" placeholder="æ·»å å¤æ³¨..."/>'
+    +'<span style="font-size:11px;color:var(--blue-text);cursor:pointer;margin-top:4px;display:block" onclick="saveNote(\''+id+'\')">ä¿å­</span>';
   document.getElementById('note-inp-'+id)?.focus();
 }
 
@@ -330,38 +330,38 @@ async function saveNote(id){
   const inp=document.getElementById('note-inp-'+id);
   if(!inp)return;
   t.note=inp.value.trim();
-  await saveDB();renderTx();showToast('备注已更新');
+  await saveDB();renderTx();showToast('å¤æ³¨å·²æ´æ°');
 }
 
 async function doAdj(type){
   const who=document.getElementById('aWho').value;
   const amt=parseFloat(document.getElementById('aAmt').value);
   const note=document.getElementById('aNote').value.trim();
-  if(!amt||amt<=0){showToast('请输入金额');return;}
+  if(!amt||amt<=0){showToast('è¯·è¾å¥éé¢');return;}
   const m=ym();if(!DB.bal[m][who])DB.bal[m][who]={used:0};
   const cu=DB.bal[m][who].used||0;const cb=+(ALLOW-cu).toFixed(2);
   let nu,desc,la,lc;
-  if(type==='add'){nu=Math.max(0,+(cu-amt).toFixed(2));desc='增加 '+who+' 余额 $'+amt.toFixed(2);la='+$'+amt.toFixed(2);lc='pos';}
-  else if(type==='sub'){nu=+(cu+amt).toFixed(2);desc='扣减 '+who+' 余额 $'+amt.toFixed(2);la='-$'+amt.toFixed(2);lc='neg2';}
-  else{nu=+(ALLOW-amt).toFixed(2);desc='设置 '+who+' 余额为 $'+amt.toFixed(2);la='= $'+amt.toFixed(2);lc='setc';}
+  if(type==='add'){nu=Math.max(0,+(cu-amt).toFixed(2));desc='å¢å  '+who+' ä½é¢ $'+amt.toFixed(2);la='+$'+amt.toFixed(2);lc='pos';}
+  else if(type==='sub'){nu=+(cu+amt).toFixed(2);desc='æ£å '+who+' ä½é¢ $'+amt.toFixed(2);la='-$'+amt.toFixed(2);lc='neg2';}
+  else{nu=+(ALLOW-amt).toFixed(2);desc='è®¾ç½® '+who+' ä½é¢ä¸º $'+amt.toFixed(2);la='= $'+amt.toFixed(2);lc='setc';}
   DB.bal[m][who].used=nu;if(!DB.adjLog)DB.adjLog=[];
   DB.adjLog.unshift({who,type,amt,note,desc,logAmt:la,logCls:lc,before:cb,after:+(ALLOW-nu).toFixed(2),date:today()});
   document.getElementById('aAmt').value='';document.getElementById('aNote').value='';
-  await saveDB();renderAll();if(adjLogOpen)renderAdjLog();showToast('已调整');
+  await saveDB();renderAll();if(adjLogOpen)renderAdjLog();showToast('å·²è°æ´');
 }
 
 let adjLogOpen=false;
-function toggleAdjLog(){adjLogOpen=!adjLogOpen;document.getElementById('adjLog').style.display=adjLogOpen?'block':'none';document.getElementById('logToggleBtn').textContent=adjLogOpen?'收起调整历史 ▴':'查看调整历史 ▾';if(adjLogOpen)renderAdjLog();}
+function toggleAdjLog(){adjLogOpen=!adjLogOpen;document.getElementById('adjLog').style.display=adjLogOpen?'block':'none';document.getElementById('logToggleBtn').textContent=adjLogOpen?'æ¶èµ·è°æ´åå² â´':'æ¥çè°æ´åå² â¾';if(adjLogOpen)renderAdjLog();}
 function renderAdjLog(){
   const log=DB.adjLog||[];const el=document.getElementById('adjLog');
-  if(!log.length){el.innerHTML='<div class="empty-state">暂无调整记录</div>';return;}
-  el.innerHTML=log.slice(0,40).map(e=>'<div class="log-entry"><div class="log-left"><div class="log-desc">'+e.desc+(e.note?' <span style="color:var(--text3)">— '+e.note+'</span>':'')+'</div><div class="log-meta">'+fmtDate(e.date)+' · $'+e.before.toFixed(0)+' → $'+e.after.toFixed(0)+'</div></div><div class="log-amt '+e.logCls+'">'+e.logAmt+'</div></div>').join('');
+  if(!log.length){el.innerHTML='<div class="empty-state">ææ è°æ´è®°å½</div>';return;}
+  el.innerHTML=log.slice(0,40).map(e=>'<div class="log-entry"><div class="log-left"><div class="log-desc">'+e.desc+(e.note?' <span style="color:var(--text3)">â '+e.note+'</span>':'')+'</div><div class="log-meta">'+fmtDate(e.date)+' Â· $'+e.before.toFixed(0)+' â $'+e.after.toFixed(0)+'</div></div><div class="log-amt '+e.logCls+'">'+e.logAmt+'</div></div>').join('');
 }
 
 async function confirmReset(){
-  if(confirm('确定重置本月所有数据？（不可恢复）')){
+  if(confirm('ç¡®å®éç½®æ¬ææææ°æ®ï¼ï¼ä¸å¯æ¢å¤ï¼')){
     const m=ym();DB.txs[m]=[];MEMBERS.forEach(n=>{DB.bal[m][n]={used:0};});
-    await saveDB();renderAll();showToast('已重置');
+    await saveDB();renderAll();showToast('å·²éç½®');
   }
 }
 
@@ -372,7 +372,7 @@ function renderCards(){
     const used=(DB.bal[m][n]||{used:0}).used||0;const bal=ALLOW-used;
     const pct=Math.min(100,(used/ALLOW)*100);const isOver=used>ALLOW,isWarn=used>ALLOW*.8;
     const bc=isOver?'over':isWarn?'warn':'';const sc=fv===n?' sel':'';
-    return '<div class="mc'+sc+'" onclick="filterTo(\''+n+'\')"><div class="mc-name">'+n+'</div><div class="mc-bal'+(bal<0?' neg':'')+'">$'+bal.toFixed(0)+'</div><div class="mc-used">已用 $'+used.toFixed(0)+' / $'+ALLOW+'</div><div class="bar-bg"><div class="bar-fill '+bc+'" style="width:'+Math.min(100,pct).toFixed(1)+'%"></div></div>'+(isOver?'<span class="mc-pill pill-over">超 $'+(used-ALLOW).toFixed(0)+'</span>':'')+(used>ALLOW+THRESH?'<span class="mc-pill pill-pnlt">×1.2</span>':'')+'</div>';
+    return '<div class="mc'+sc+'" onclick="filterTo(\''+n+'\')"><div class="mc-name">'+n+'</div><div class="mc-bal'+(bal<0?' neg':'')+'">$'+bal.toFixed(0)+'</div><div class="mc-used">å·²ç¨ $'+used.toFixed(0)+' / $'+ALLOW+'</div><div class="bar-bg"><div class="bar-fill '+bc+'" style="width:'+Math.min(100,pct).toFixed(1)+'%"></div></div>'+(isOver?'<span class="mc-pill pill-over">è¶ $'+(used-ALLOW).toFixed(0)+'</span>':'')+(used>ALLOW+THRESH?'<span class="mc-pill pill-pnlt">Ã1.2</span>':'')+'</div>';
   }).join('');
 }
 function filterTo(n){const f=document.getElementById('fFilter');f.value=f.value===n?'':n;renderTx();renderCards();}
@@ -381,26 +381,26 @@ function renderTx(){
   const m=ym();const filter=document.getElementById('fFilter').value;
   const txs=(DB.txs[m]||[]).filter(t=>!filter||t.member===filter);
   const list=document.getElementById('txList');
-  if(!txs.length){list.innerHTML='<div class="empty-state">本月暂无记录</div>';return;}
+  if(!txs.length){list.innerHTML='<div class="empty-state">æ¬æææ è®°å½</div>';return;}
   list.innerHTML=txs.map(t=>{
     const tags=[];
     if(t.type==='recurring'){
-      const recurTag='<span class="tag" style="background:var(--green-bg);color:var(--green-text)">每月</span>';
+      const recurTag='<span class="tag" style="background:var(--green-bg);color:var(--green-text)">æ¯æ</span>';
       tags.push(recurTag);
-    } else if(t.inst>1)tags.push('<span class="tag ti">'+t.inst+'期</span>');
+    } else if(t.inst>1)tags.push('<span class="tag ti">'+t.inst+'æ</span>');
     if(t.splitWith&&t.splitWith.length)tags.push('<span class="tag ts">AA</span>');
     if(t.adj<1)tags.push('<span class="tag ta">'+(t.adj*100).toFixed(0)+'%</span>');
     const base=(t.originalAmt/(1+(t.splitWith||[]).length))*t.adj;
-    if(t.charge>base/t.inst*1.05)tags.push('<span class="tag tp">×1.2</span>');
+    if(t.charge>base/t.inst*1.05)tags.push('<span class="tag tp">Ã1.2</span>');
     const cur=t.currency||'USD';const sym=CURRENCIES[cur]||'$';
     const showOrig=cur!=='USD';
-    const cny='≈ ¥'+(t.charge*fxRate).toFixed(0);
-    const noteEditBtn='<span class="tx-note-edit" data-noteid="'+t.id+'">'+( t.note?'编辑':'+备注')+'</span>';
+    const cny='â Â¥'+(t.charge*fxRate).toFixed(0);
+    const noteEditBtn='<span class="tx-note-edit" data-noteid="'+t.id+'">'+( t.note?'ç¼è¾':'+å¤æ³¨')+'</span>';
     const noteHtml='<div class="tx-note" id="note-wrap-'+t.id+'">'+( t.note?'<span class="tx-note-text">'+t.note+'</span>':'')+noteEditBtn+'</div>';
     const recurInfo = t.type==='recurring'
-      ? (t.recurEnd ? ' · 至 '+t.recurEnd : ' · 长期') + '<span style="margin-left:6px;font-size:11px;color:var(--red-text);cursor:pointer" data-stopid="'+t.id+'">[停止]</span>'
+      ? (t.recurEnd ? ' Â· è³ '+t.recurEnd : ' Â· é¿æ') + '<span style="margin-left:6px;font-size:11px;color:var(--red-text);cursor:pointer" data-stopid="'+t.id+'">[åæ­¢]</span>'
       : '';
-    return '<div class="tx"><div class="tx-left"><div class="tx-name">'+t.item+tags.join('')+'</div>'+noteHtml+'<div class="tx-meta">'+t.member+' · '+fmtDate(t.date)+(showOrig?' · '+sym+(cur==='JPY'?t.originalAmt.toFixed(0):t.originalAmt.toFixed(2)):'')+recurInfo+'</div></div><div class="tx-right"><div class="tx-amt">-$'+t.charge.toFixed(2)+'</div><div class="tx-cny">'+cny+'</div><span class="tx-del" onclick="deleteTx(\''+t.id+'\')">删除</span></div></div>';
+    return '<div class="tx"><div class="tx-left"><div class="tx-name">'+t.item+tags.join('')+'</div>'+noteHtml+'<div class="tx-meta">'+t.member+' Â· '+fmtDate(t.date)+(showOrig?' Â· '+sym+(cur==='JPY'?t.originalAmt.toFixed(0):t.originalAmt.toFixed(2)):'')+recurInfo+'</div></div><div class="tx-right"><div class="tx-amt">-$'+t.charge.toFixed(2)+'</div><div class="tx-cny">'+cny+'</div><span class="tx-del" onclick="deleteTx(\''+t.id+'\')">å é¤</span></div></div>';
   }).join('');
   list.onclick=function(e){
     const ne=e.target.closest('[data-noteid]');
@@ -417,7 +417,7 @@ async function stopRecurring(id){
   const nextMonth=new Date();nextMonth.setMonth(nextMonth.getMonth()+1);
   const nm=nextMonth.getFullYear()+'-'+String(nextMonth.getMonth()+1).padStart(2,'0');
   t.recurEnd=nm;
-  await saveDB();renderTx();showToast('下月起停止');
+  await saveDB();renderTx();showToast('ä¸æèµ·åæ­¢');
 }
 function renderAll(){renderCards();renderTx();}
 
@@ -429,11 +429,11 @@ function buildCurOpts(sel){return Object.keys(CURRENCIES).map(k=>'<option value=
 function renderApp(){
   document.getElementById('app').innerHTML=`
 <div class="header">
-  <span class="header-title">购物额度</span>
+  <span class="header-title">è´­ç©é¢åº¦</span>
   <div class="header-right">
     <span class="header-ym" id="ymLabel"></span>
-    <span class="sync-label" id="syncLabel">连接中...</span>
-    <div class="sync-dot busy" id="syncDot" onclick="manualSync()" title="点击手动同步"></div>
+    <span class="sync-label" id="syncLabel">è¿æ¥ä¸­...</span>
+    <div class="sync-dot busy" id="syncDot" onclick="manualSync()" title="ç¹å»æå¨åæ­¥"></div>
   </div>
 </div>
 
@@ -443,56 +443,56 @@ function renderApp(){
     <div class="fx-inputs">
       <input type="number" id="fxAmt" value="1" min="0" step="any" oninput="updateFxResult()" style="width:72px"/>
       <select id="fxFrom" onchange="updateFxResult()">${buildCurOpts('USD')}</select>
-      <span class="fx-arrow">→</span>
+      <span class="fx-arrow">â</span>
       <select id="fxTo" onchange="updateFxResult()">${buildCurOpts('CNY')}</select>
       <span class="fx-result" id="fxResult">...</span>
     </div>
   </div>
-  <div class="fx-updated" id="fxUpdatedTxt">正在获取汇率...</div>
+  <div class="fx-updated" id="fxUpdatedTxt">æ­£å¨è·åæ±ç...</div>
 </div>
 
 <div class="cards" id="cards"></div>
 
-<div class="section"><div class="section-header"><span class="section-title">添加消费</span></div><div class="form-body">
+<div class="section"><div class="section-header"><span class="section-title">æ·»å æ¶è´¹</span></div><div class="form-body">
   <div class="fg2">
-    <div class="fl"><label>购买人</label><select id="fWho" onchange="onWhoChange()"><option>Frank</option><option>Lea</option></select></div>
-    <div class="fl"><label>购买日期</label><input type="date" id="fDate"/></div>
+    <div class="fl"><label>è´­ä¹°äºº</label><select id="fWho" onchange="onWhoChange()"><option>Frank</option><option>Lea</option></select></div>
+    <div class="fl"><label>è´­ä¹°æ¥æ</label><input type="date" id="fDate"/></div>
   </div>
-  <div class="fl"><label>物品</label><input type="text" id="fItem" placeholder="买了什么？"/></div>
-  <div class="fg2"><div class="fl"><label>类型</label><select id="fType" onchange="onTypeChange()"><option value="once">一次性</option><option value="installment">分期（无息）</option><option value="recurring">Recurring 订阅</option></select></div><div class="fl" id="recurEndRow" style="display:none"><label>结束月份</label><input type="month" id="fRecurEnd" placeholder="不填 = 长期"/></div></div>
-  <div class="fl"><label>备注（用途等）</label><input type="text" id="fNote" placeholder="备注..."/></div>
-  <div class="fl"><label>金额 &amp; 货币</label>
+  <div class="fl"><label>ç©å</label><input type="text" id="fItem" placeholder="ä¹°äºä»ä¹ï¼"/></div>
+  <div class="fg2"><div class="fl"><label>ç±»å</label><select id="fType" onchange="onTypeChange()"><option value="once">ä¸æ¬¡æ§</option><option value="installment">åæï¼æ æ¯ï¼</option><option value="recurring">Recurring è®¢é</option></select></div><div class="fl" id="recurEndRow" style="display:none"><label>ç»ææä»½</label><input type="month" id="fRecurEnd" placeholder="ä¸å¡« = é¿æ"/></div></div>
+  <div class="fl"><label>å¤æ³¨ï¼ç¨éç­ï¼</label><input type="text" id="fNote" placeholder="å¤æ³¨..."/></div>
+  <div class="fl"><label>éé¢ &amp; è´§å¸</label>
     <div class="amt-row">
       <input type="number" id="fAmt" placeholder="0.00" min="0.01" step="0.01" inputmode="decimal" oninput="updatePreview()"/>
       <select id="fCur" onchange="updatePreview()">${buildCurOpts('USD')}</select>
     </div>
   </div>
   <div class="fg2" id="instRow" style="display:none">
-    <div class="fl"><label>分期数</label><select id="fInst" onchange="updatePreview()"><option value="1">不分期</option><option value="2">2期（无息）</option><option value="3">3期（无息）</option><option value="4">4期（无息）</option><option value="6">6期（无息）</option><option value="12">12期（无息）</option></select></div>
-    <div class="fl"><label>半刚需折扣</label><select id="fAdj" onchange="onAdjChange()"><option value="1">全额 (100%)</option><option value="0.8">轻刚需 (80%)</option><option value="0.6">半刚需 (60%)</option><option value="0.4">强刚需 (40%)</option><option value="c">自定义...</option></select></div>
+    <div class="fl"><label>åææ°</label><select id="fInst" onchange="updatePreview()"><option value="1">ä¸åæ</option><option value="2">2æï¼æ æ¯ï¼</option><option value="3">3æï¼æ æ¯ï¼</option><option value="4">4æï¼æ æ¯ï¼</option><option value="6">6æï¼æ æ¯ï¼</option><option value="12">12æï¼æ æ¯ï¼</option></select></div>
+    <div class="fl"><label>ååéææ£</label><select id="fAdj" onchange="onAdjChange()"><option value="1">å¨é¢ (100%)</option><option value="0.8">è½»åé (80%)</option><option value="0.6">ååé (60%)</option><option value="0.4">å¼ºåé (40%)</option><option value="c">èªå®ä¹...</option></select></div>
   </div>
-  <div class="fl" id="adjRow"><label>自定义比例 (0–1)</label><input type="number" id="fAdjC" placeholder="例如 0.75" min="0.01" max="1" step="0.05" inputmode="decimal" oninput="updatePreview()"/></div>
-  <div class="fl"><label>AA 制（与谁平摊）</label><div class="toggle-row"><button class="tb" data-n="Frank" onclick="toggleSplit(this)">Frank</button><button class="tb" data-n="Lea" onclick="toggleSplit(this)">Lea</button></div></div>
-  <div id="preview" class="preview empty">填写金额后会显示实际计入金额</div>
-  <button class="add-btn" id="addBtn" onclick="addTx()">添加记录</button>
+  <div class="fl" id="adjRow"><label>èªå®ä¹æ¯ä¾ (0â1)</label><input type="number" id="fAdjC" placeholder="ä¾å¦ 0.75" min="0.01" max="1" step="0.05" inputmode="decimal" oninput="updatePreview()"/></div>
+  <div class="fl"><label>AA å¶ï¼ä¸è°å¹³æï¼</label><div class="toggle-row"><button class="tb" data-n="Frank" onclick="toggleSplit(this)">Frank</button><button class="tb" data-n="Lea" onclick="toggleSplit(this)">Lea</button></div></div>
+  <div id="preview" class="preview empty">å¡«åéé¢åä¼æ¾ç¤ºå®éè®¡å¥éé¢</div>
+  <button class="add-btn" id="addBtn" onclick="addTx()">æ·»å è®°å½</button>
 </div></div>
 
-<div class="section"><div class="section-header"><span class="section-title">手动调整额度</span></div><div class="madj-body">
+<div class="section"><div class="section-header"><span class="section-title">æå¨è°æ´é¢åº¦</span></div><div class="madj-body">
   <div class="fg2">
-    <div class="fl"><label>对象</label><select id="aWho"><option>Frank</option><option>Lea</option></select></div>
-    <div class="fl"><label>金额 ($)</label><input type="number" id="aAmt" placeholder="0.00" min="0.01" step="0.01" inputmode="decimal"/></div>
+    <div class="fl"><label>å¯¹è±¡</label><select id="aWho"><option>Frank</option><option>Lea</option></select></div>
+    <div class="fl"><label>éé¢ ($)</label><input type="number" id="aAmt" placeholder="0.00" min="0.01" step="0.01" inputmode="decimal"/></div>
   </div>
-  <div class="fl"><label>备注（选填）</label><input type="text" id="aNote" placeholder="调整原因..."/></div>
+  <div class="fl"><label>å¤æ³¨ï¼éå¡«ï¼</label><input type="text" id="aNote" placeholder="è°æ´åå ..."/></div>
   <div class="madj-btns">
-    <button class="madj-btn plus" onclick="doAdj('add')">＋ 增加余额</button>
-    <button class="madj-btn minus" onclick="doAdj('sub')">－ 扣减余额</button>
-    <button class="madj-btn setbal" onclick="doAdj('set')">设为此值</button>
+    <button class="madj-btn plus" onclick="doAdj('add')">ï¼ å¢å ä½é¢</button>
+    <button class="madj-btn minus" onclick="doAdj('sub')">ï¼ æ£åä½é¢</button>
+    <button class="madj-btn setbal" onclick="doAdj('set')">è®¾ä¸ºæ­¤å¼</button>
   </div>
-  <div class="log-wrap"><button class="log-toggle" id="logToggleBtn" onclick="toggleAdjLog()">查看调整历史 ▾</button><div id="adjLog" style="display:none"></div></div>
+  <div class="log-wrap"><button class="log-toggle" id="logToggleBtn" onclick="toggleAdjLog()">æ¥çè°æ´åå² â¾</button><div id="adjLog" style="display:none"></div></div>
 </div></div>
 
-<div class="section"><div class="section-header" style="padding-bottom:0"><span class="section-title">本月记录</span><button class="danger-btn" onclick="confirmReset()">重置本月</button></div>
-  <div class="tx-filter"><select id="fFilter" onchange="renderTx()"><option value="">全部成员</option><option>Frank</option><option>Lea</option></select></div>
+<div class="section"><div class="section-header" style="padding-bottom:0"><span class="section-title">æ¬æè®°å½</span><button class="danger-btn" onclick="confirmReset()">éç½®æ¬æ</button></div>
+  <div class="tx-filter"><select id="fFilter" onchange="renderTx()"><option value="">å¨é¨æå</option><option>Frank</option><option>Lea</option></select></div>
   <div id="txList"></div>
 </div>`;
   document.getElementById('fDate').value=today();
@@ -500,12 +500,12 @@ function renderApp(){
 }
 
 async function manualSync(){
-  setSyncStatus('busy','同步中...');
+  setSyncStatus('busy','åæ­¥ä¸­...');
   try{
     const fresh=await readBin();
     DB=fresh;if(!DB.txs)DB.txs={};if(!DB.bal)DB.bal={};if(!DB.adjLog)DB.adjLog=[];
-    ensureMonth();renderAll();setSyncStatus('ok','已同步');showToast('数据已刷新');
-  }catch(e){setSyncStatus('err','同步失败');showToast('同步失败，请检查网络');}
+    ensureMonth();renderAll();setSyncStatus('ok','å·²åæ­¥');showToast('æ°æ®å·²å·æ°');
+  }catch(e){setSyncStatus('err','åæ­¥å¤±è´¥');showToast('åæ­¥å¤±è´¥ï¼è¯·æ£æ¥ç½ç»');}
 }
 
 init();
